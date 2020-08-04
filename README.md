@@ -1,5 +1,5 @@
 # 2020-08-03
-<img src="https://github.com/jeremyhager/jeremyhager.github.io/blob/master/images/ihave.jpg" alt="I have no idea what I'm doing" width="250">
+<img src="https://raw.githubusercontent.com/jeremyhager/jeremyhager.github.io/master/images/ihave.jpg" alt="I have no idea what I'm doing" width="250">
 
 ### Lazy logging/blogging
 
