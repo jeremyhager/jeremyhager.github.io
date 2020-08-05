@@ -1,5 +1,16 @@
+# 2020-08-05 (imcomplete)
+<img src="https://raw.githubusercontent.com/jeremyhager/jeremyhager.github.io/master/images/its-working-its-working.jpg" alt="It's working, it's working!" width="256">
+
+### Getting a Windows VM to work on libvirt
+
+So on my last entry I mentioned trying to get Windows Server 2016 to work on libvirt. After I tried installing the GUI to connect via VNC somewhere along the way I reconnected to ssh, and sure enough a little message popped up: `Web console: https://centos8.lan:9090/ or https://192.168.86.41:9090/`. I thought this a bit odd, then tested out to see if my suspicions were correct - could I use the web console to view the GUI on my Windows Server 2016 VM? Sure enough, it had an option to install a virtual machine manager under "Applications". From there I could see that it wasn't booting to the dvd/cdrom, which needed to be changed via `virsh`: 
+
+When I first started to use the vm I quickly realized my vm was on a different network, and I couldn't connect via Enter-PSSession. Even opening the `TrustedHosts` to `*`, I wasn't getting anywhere. I then read into libvirt more and found that by default, the [vswitch is in NAT mode](https://wiki.libvirt.org/page/VirtualNetworking#Network_Address_Translation_.28NAT.29).
+
+<hr>
+
 # 2020-08-03
-<img src="https://raw.githubusercontent.com/jeremyhager/jeremyhager.github.io/master/images/ihave.jpg" alt="I have no idea what I'm doing" width="250">
+<img src="https://raw.githubusercontent.com/jeremyhager/jeremyhager.github.io/master/images/ihave.jpg" alt="I have no idea what I'm doing" width="256">
 
 ### Lazy logging/blogging
 
