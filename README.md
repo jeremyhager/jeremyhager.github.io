@@ -35,6 +35,7 @@ One thing I noticed is that by using `--location` I no longer needed to eject th
   <summary>virt-install man page: -x, --extra-args KERNELARGS</summary>
   
   #### -x, --extra-args KERNELARGS
+  
      Additional kernel command line arguments to pass to the installer when performing a guest install from
      "--location". One common usage is specifying an anaconda kickstart file for automated installs, such as
      --extra-args "ks=https://myserver/my.ks"
@@ -45,6 +46,7 @@ One thing I noticed is that by using `--location` I no longer needed to eject th
   <summary>virt-install man page: -c, --cdrom PATH</summary>
   
   #### -c, --cdrom PATH
+  
      ISO file or CDROM device to use for VM install media. After install, the the virtual CDROM device will
      remain attached to the VM, but with the ISO or host path media ejected.
 </details>
@@ -53,6 +55,7 @@ One thing I noticed is that by using `--location` I no longer needed to eject th
   <summary>virt-install man page: -l, --location OPTIONS</summary>
   
   #### --l, --location OPTIONS
+  
      Distribution tree installation source. virt-install can recognize certain distribution trees and fetches a
      bootable kernel/initrd pair to launch the install.
 
@@ -103,6 +106,7 @@ One thing I noticed is that by using `--location` I no longer needed to eject th
   <summary>virt-install man page: --initrd-inject PATH</summary>
   
   #### ---initrd-inject PATH
+  
     Add PATH to the root of the initrd fetched with "--location". This can be used to run an automated install
            without requiring a network hosted kickstart file:
 
