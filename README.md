@@ -10,7 +10,7 @@ Here is what I was running that would create this error:
 ```bash
 sudo virt-install --connect qemu:///system --network=bridge:virbr0 --initrd-inject="home/jeremy/ks.cfg" --extra-args="ks=file:/ks.cfg console=ttys0" -n MoinMoin -f /home/imgs/moinmoin.img -r 1024 -s 12 -c /home/isos/CentOS-7-x86_64-DVD-1908.iso --os-type=centos7.0 --accelerate --hvm --nographics --boot cdrom
 ```
-For anyone reading this that has experiance with libvirt/virt-install, you probably already see what I'm doing wrong. When I searched "ERROR Kernel arguments are only supported with location or kernel installs" online with quotes, I had a hard time finding anything related to what I as doing. However I still didn't know what was going on even after reading anything I could find on the matter, so the next thing I tried was to remove the `--extra-args` portion to see if something was conflicting:
+For anyone reading this that has experience with libvirt/virt-install, you probably already see what I'm doing wrong. When I searched "ERROR Kernel arguments are only supported with location or kernel installs" online with quotes, I had a hard time finding anything related to what I was doing. However I still didn't know what was going on even after reading anything I could find on the matter, so the next thing I tried was to remove the `--extra-args` portion to see if something was conflicting:
 ```bash
 sudo virt-install --connect qemu:///system --network=bridge:virbr0 --initrd-inject="home/jeremy/ks.cfg" --extra-args="ks=file:/ks.cfg console=ttys0" -n MoinMoin -f /home/imgs/moinmoin.img -r 1024 -s 12 -c /home/isos/CentOS-7-x86_64-DVD-1908.iso --os-type=centos7.0 --accelerate --hvm --nographics --boot cdrom
 
@@ -26,7 +26,7 @@ So there it was: I had to change `--cdrom` to `location` in order to work with `
 sudo virt-install --connect qemu:///system --network=bridge:virbr0 --initrd-inject="/home/jeremy/ks.cfg" --extra-args="ks=file:/ks.cfg console=ttyS0" -n MoinMoin -f /home/imgs/moinmoin.img -r 1024 -s 12 --location=/home/isos/CentOS-7-x86_64-DVD-1908.iso --os-type=centos7.0 --accelerate --hvm --graphics none
 ```
 
-Then boom: Install flew by and and I was connected via serial console to the VM! Now in my defense to the comment slm made above, I went back to the man page of virt-install and I did not see it _explicitly_ expressed that one **cannot** use `--extra-args` with `-c` and `--extra-args` **only** works with `--location`. However it _does_ state that `--extra-args` is used to pass kernel arguments from `--location`. So I suppose one could say that if I read it more carefully perhaps I'd make the connection...however I still do wish it was a bit more explicit for those that may have a lapse in reading comprehension.
+Then boom: Install flew by and I was connected via serial console to the VM! Now in my defense to the comment slm made above, I went back to the man page of virt-install and I did not see it _explicitly_ expressed that one **cannot** use `--extra-args` with `-c` and `--extra-args` **only** works with `--location`. However it _does_ state that `--extra-args` is used to pass kernel arguments from `--location`. So I suppose one could say that if I read it more carefully perhaps I'd make the connection...however I still do wish it was a bit more explicit for those that may have a lapse in reading comprehension.
 
 One thing I noticed is that by using `--location` I no longer needed to eject the cdrom before undefining the VM in virsh. In case you ever run into this yourself, the syntax is rather easy to eject an ISO from virsh: `change-media domain PATH --eject` where `PATH` = sda, sdb, etc. Finding what `PATH` to use is also easy: `domblklist domain`. 
 
@@ -109,7 +109,7 @@ One thing I noticed is that by using `--location` I no longer needed to eject th
            --initrd-inject=/path/to/my.ks --extra-args "ks=file:/my.ks"
 </details>
 
-If you don't beleive me, check out the refences below and look for yourself (or just run a `man virt-intall`).
+If you don't believe me, check out the references below and look for yourself (or just run a `man virt-intall`).
 
 ### How's Linux going?
 
