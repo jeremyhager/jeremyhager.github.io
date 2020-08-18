@@ -4,7 +4,7 @@ author: Jeremy Hager
 author_url: https://github.com/jeremyhager/
 author_image_url: https://avatars2.githubusercontent.com/u/47301461?s=460&u=05e044dcce4be18b670f9e2c9bda99c511cd4009&v=4
 tags: [Website]
-description: First blog post on the new wegbsite!
+description: First blog post on the new website!
 image: https://i.imgur.com/mErPwqL.png
 ---
 ![img](../static/img/logo.svg)
@@ -22,6 +22,6 @@ Sure enough, after looking at their projects at their [open source website](http
 * Flexible and intuitive enough I could change links easy.
 * Static site to boot, so I could deploy to github pages and document my environment on my website!
 
-I still have a bit to learn between markdown and how to use this website, but I think I'm getting the hang of it. Now that I have the [Docs](/Docs) section, I can keep this to my thoghts and opinions on what I'm doing, and keep the how-to style stulff in the Docs.
+I still have a bit to learn between markdown and how to use this website, but I think I'm getting the hang of it. Now that I have the [Docs](/Docs) section, I can keep this to my thoughts and opinions on what I'm doing, and keep the how-to style stuff in the Docs.
 
 As for the old blogs, I've just manually copy+pasted them over and changed the references for the images. Otherwise, it was pretty easy to get this set up.

@@ -4,7 +4,7 @@ author: Jeremy Hager
 author_url: https://github.com/jeremyhager/
 author_image_url: https://avatars2.githubusercontent.com/u/47301461?s=460&u=05e044dcce4be18b670f9e2c9bda99c511cd4009&v=4
 tags: [Website,Linux,Windows, Libvirt]
-description: First blog post on the new wegbsite!
+description: Trying to get autounattend.xml to work with a Windows VM and testing out libvirt in general
 image: https://i.imgur.com/mErPwqL.png
 ---
 
