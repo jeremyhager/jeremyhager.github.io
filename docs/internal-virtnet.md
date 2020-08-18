@@ -8,4 +8,4 @@ sidebar_label: Internal.Virtnet Overview
 
 ![img](/img/internal-virtnet.svg)
 
-<div w3-include-html="/img/internal-virtnet.html"></div>
+<iframe src="/static/img/internal-virtnet.html" title="test></iframe>
