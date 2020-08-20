@@ -1,12 +1,12 @@
 module.exports = {
-  title: 'Hey, I\'m Jeremy!',
-  tagline: 'IT guy learning open source stuff, with a Windows background.',
+  title: 'Yugawa',
+  tagline: 'Hi, I\'m Jeremy. Nice to meet you!',
   url: 'https://yugawa.xyz',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'jeremyhager', // Usually your GitHub org/user name.
-  projectName: 'https://github.com/jeremyhager/jeremyhager.github.io', // Usually your repo name.
+  projectName: 'jeremyhager.github.io', // Usually your repo name.
   themeConfig: {
     navbar: {
       title: 'Yugawa',
@@ -22,8 +22,9 @@ module.exports = {
           position: 'left',
         },
         {to: 'blog', label: 'Blog', position: 'left'},
+	{to: 'aboutMe', label:'About Me', position:'right'},
         {
-          href: 'https://github.com/jeremyhager/jeremyhager.github.io',
+          href: 'https://github.com/jeremyhager/yugawa-website',
           label: 'GitHub',
           position: 'right',
         },
@@ -85,17 +86,17 @@ module.exports = {
       {
         docs: {
           // It is recommended to set document id as docs home page (`docs/` path).
-          homePageId: 'doc1',
+          homePageId: 'internal-virtnet-overview',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/jeremyhager/jeremyhager.github.io/edit/master/website/',
+            'https://github.com/jeremyhager/yugawa-website/edit/master',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/jeremyhager/jeremyhager.github.io/edit/master/website/blog/',
+            'https://github.com/jeremyhager/yugawa-website/edit/master',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

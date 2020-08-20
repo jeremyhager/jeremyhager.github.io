@@ -59,20 +59,19 @@ function Home() {
   const {siteConfig = {}} = context;
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={siteConfig.tagline}
       description="Description will go into a meta tag in <head />">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <h1 className="hero__title">{siteConfig.tagline}</h1>
           <div className={styles.buttons}>
             <Link
               className={clsx(
                 'button button--outline button--secondary button--lg',
-                styles.getStarted,
+                styles.button,
               )}
-              to={useBaseUrl('docs/')}>
-              Get Started
+              to={useBaseUrl('AboutMe/')}>
+              About Me
             </Link>
           </div>
         </div>
