@@ -17,7 +17,7 @@ sidebar_label: Foreman Configuration
 |Hostname| foreman.internal.virtnet|
 |IP address| DHCP|
 |Kernel | 3.10.0-1062.el7.x86_64|
-|Release|CentOS Linux release 8.2.2004 (Core)|
+|Release|CentOS Linux release 7.8.2003 (Core)|
 |Firewall services| dhcpv6-client ssh|
 |Interfaces| eth0 |
 |Automatic updates| False |

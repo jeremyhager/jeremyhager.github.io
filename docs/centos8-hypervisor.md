@@ -2,6 +2,7 @@
 id: centos8-hypervisor
 title: Hypervisor Configuration
 sidebar_label: Hypervisor Configuration
+image: https://i.imgur.com/mErPwqL.png
 ---
 
 ## Hardware Info
