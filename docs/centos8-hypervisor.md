@@ -22,15 +22,18 @@ sidebar_label: Hypervisor Configuration
 |Name   | Spec   |
 |-------|--------|
 |Hostname| centos8|
+|IP address| DHCP|
 |Kernel | 4.18.0-193.14.2.el8_2.x86_64|
+|Release|CentOS Linux release 8.2.2004 (Core)|
 |Firewall services| cockpit dhcpv6-client ssh|
 |Interfaces| enp2s0, virbr0 (main) |
 |Automatic updates| False |
 |Last updated| 2020-08-19 |
-|Users  | jeremy, root (disabled)|  
+|Users  | jeremy, root (disabled)|
 
-
-<!--
-TODO
-Find a way to automatically import this info later on
--->
+## Package Info
+|Name   | Spec   |
+|-------|--------|
+|Libvirt|4.5.0|
+|cockpit|211.3-1.el8|
+|rsync|3.1.3-7.el8.x86_64|

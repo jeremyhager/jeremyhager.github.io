@@ -1,20 +1,15 @@
 ---
 id: wiki-server
-title: Documentation Server Configuration
-sidebar_label: Documentation Server Configuration
+title: Documentation Configuration
+sidebar_label: Documentation Configuration
 ---
 
-## Hardware Info
+:::info Latest Documentation
+Until CI/CD is in place, the latest documentation will be at https://github.com/jeremyhager/yugawa-website.
+:::
 
-|Asset     |Capacity     | Comments|
-|----------|-------------|---------|
-|CPU       |2            |         |
-|RAM       |1024 MiB     |         |
-|virtual size|12G        |         |
-|Snapshot  |951M         |`ID: 1`  |
-
-
+### Public documentation can currently be found at: https://jeremyhager.github.io/Docs
 <!--
 TODO
-Find a way to automatically import this info later on
+Find a way to automatically import server info later on. Foreman/Chef?
 -->
