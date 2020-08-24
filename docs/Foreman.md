@@ -18,7 +18,8 @@ sidebar_label: Foreman Configuration
 |IP address| 192.168.86.10/24|
 |Kernel | 3.10.0-1062.el7.x86_64|
 |Release|CentOS Linux release 7.8.2003 (Core)|
-|Firewall services| dhcpv6-client ssh|
+|Firewall services| dhcpv6-client http https ssh|
+|Firewall Ports|5647/tcp 9090/tcp|
 |Interfaces| eth0 |
 |Automatic updates| False |
 |Last updated| 2020-08-24 |
@@ -40,3 +41,4 @@ sidebar_label: Foreman Configuration
 ```bash title="/etc/hosts"
 192.168.86.10 foreman.internal.virtnet
 ```
+

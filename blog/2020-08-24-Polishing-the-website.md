@@ -26,7 +26,7 @@ And so that's just what I did, added a static IP address and added `foreman.inte
 
 Once Foreman is configured I'll be able to move on to DHCP and DNS, and should be able to remove that pesky static `hosts` entry.
 
-However, after I installed Foreman I realized quickly I'd want [Katello](https://www.theforeman.org/plugins/katello/) and all of the capabilities it brings (at this point namely: [errata](https://www.theforeman.org/plugins/katello/3.16/user_guide/content_hosts/index.html) and [Smart Proxies](https://theforeman.org/plugins/katello/3.16/user_guide/smart_proxies/index.html)).
+However, after I installed Foreman I realized quickly I'd want [Katello](https://www.theforeman.org/plugins/katello/) and all of the capabilities it brings (at this point namely: [errata](https://theforeman.org/plugins/katello/3.16/user_guide/errata/index.html) and [Smart Proxies](https://theforeman.org/plugins/katello/3.16/user_guide/smart_proxies/index.html)).
 
 The install was fairly straight-forward as per Katello's [install instructions](https://theforeman.org/plugins/katello/3.16/installation/index.html).
 
