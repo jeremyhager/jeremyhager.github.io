@@ -3,7 +3,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Internal.VirtNet',
-      items: ['internal-virtnet-overview','centos8-hypervisor','wiki-server','foreman'],
+      items: ['internal-virtnet-overview','centos8-hypervisor','documentation-server','foreman'],
 
 
     },

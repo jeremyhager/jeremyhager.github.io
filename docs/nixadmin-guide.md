@@ -5,7 +5,7 @@ sidebar_label: Linux Sysadmin Main Guide
 ---
 
 
-## Main Guide
+### Main Guide
 
 :::info
 This will be used as the main guide, however the other guides in Docs/Guides will be used as reference and to double-check what I'm learning.
