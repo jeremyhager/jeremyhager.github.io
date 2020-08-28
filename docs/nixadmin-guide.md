@@ -78,14 +78,16 @@ Get Foreman to work with Chef
 
 ### More stuff to learn, not implied or direct from above
 
-|Languages |CI/CD|Containers|Infrastructure Monitoring| Cloud Providers|
-|----------|-----|----------|-------------------------|----------------|
-|Python ![img](/img/Status-Not-Started-lightgrey.svg)     |Jenkins ![img](/img/Status-Not-Started-lightgrey.svg)|Kubernetes ![img](/img/Status-Not-Started-lightgrey.svg)| Prometheus ![img](/img/Status-Not-Started-lightgrey.svg)     |AWS ![img](/img/Status-Not-Started-lightgrey.svg)             |
-|Ruby ![img](/img/Status-Not-Started-lightgrey.svg)      |GitHub Actions ![img](/img/Status-Not-Started-lightgrey.svg)|Docker ![img](/img/Status-Not-Started-lightgrey.svg)|Datadog ![img](/img/Status-Not-Started-lightgrey.svg)                    |Azure ![img](/img/Status-Not-Started-lightgrey.svg)           |
-|Go ![img](/img/Status-Not-Started-lightgrey.svg)        |       |      |                           |Digital Ocean ![img](/img/Status-Not-Started-lightgrey.svg)   |
+|Languages |CI/CD|Containers|Infrastructure Monitoring| Cloud Providers|Cloud Automation|Configuration Management|
+|----------|-----|----------|-------------------------|----------------|----------------|------------------------|
+|Python ![img](/img/Status-Not-Started-lightgrey.svg)|Jenkins ![img](/img/Status-Not-Started-lightgrey.svg)|Kubernetes ![img](/img/Status-Not-Started-lightgrey.svg)| Prometheus ![img](/img/Status-Not-Started-lightgrey.svg)|AWS ![img](/img/Status-Not-Started-lightgrey.svg)|Terraform ![img](/img/Status-Not-Started-lightgrey.svg)| Chef ![img](/img/Status-Not-Started-lightgrey.svg)|
+|Ruby ![img](/img/Status-Not-Started-lightgrey.svg)|GitHub Actions ![img](/img/Status-Not-Started-lightgrey.svg)|Docker ![img](/img/Status-Not-Started-lightgrey.svg)|Datadog ![img](/img/Status-Not-Started-lightgrey.svg)|Azure ![img](/img/Status-Not-Started-lightgrey.svg)|Cloudformation ![img](/img/Status-Not-Started-lightgrey.svg)| Ansible ![img](/img/Status-Not-Started-lightgrey.svg)|
+|Go ![img](/img/Status-Not-Started-lightgrey.svg)| | | |Digital Ocean ![img](/img/Status-Not-Started-lightgrey.svg)|| Puppet ![img](/img/Status-Not-Started-lightgrey.svg)|
+|||||||Salt ![img](/img/Status-Not-Started-lightgrey.svg)|
 
 :::note
-_Table is listed in level of understanding I think I **should** have. Eg. I should get more experience with Python than Ruby, and more Ruby than Go._
+_Table is listed in level of understanding I think I **should** have. Eg. I should get more experience with Python than Ruby, and more Ruby than Go._  
+As this is a living document, priorities may change over time.
 :::
 
 ### Sources

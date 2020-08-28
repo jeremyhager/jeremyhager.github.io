@@ -38,7 +38,13 @@ sidebar_label: Foreman Configuration
 |Katello|katello.noarch 0:3.16.0-1.el7|
 
 ## Other configurations
-```bash title="/etc/hosts"
+```plain title="/etc/hosts"
 192.168.86.10 foreman.internal.virtnet
 ```
 
+```yaml title="~/.hammer/cli_config.yml"
+:foreman:
+ :host: 'https://foreman.internal.virtnet'
+ :username: 'admin'
+ :password: 'password'
+```
