@@ -74,7 +74,7 @@ Skipping errata [...] — No packages found
 ```
 I tried setting `--include-repo=` after running `pulp-admin repo list`, but that did not result in any errata info as well. I looked at the GitHub page for the perl script to see if anyone else has ran into a similar issue. Sure enough, an [open issue](https://github.com/rdrgmnzs/pulp_centos_errata_import/issues/27) showed up: "All errata fail to import showing no package found". However it seemed to be a dead end after giving the suggestions a try. Finally I looked at the script itself to see what it was doing, and hopefully where it was failing. I found the spot I was looking for:
 
-```clike title="Lines 155-156"
+```clike title="Lines 154-156"
   # Get all packages in current channel
   my @allpkg = `pulp-admin $pulp_args rpm repo content rpm --repo-id=$repo --fields=filename | grep Filename: | awk '{print \$2}' `;
   chomp @allpkg;
@@ -94,5 +94,5 @@ Excited to move on from Foreman! I may not be "done" with it but I am happy to b
 ### Sources
 - [Image source](https://www.reddit.com/r/OSHA/comments/iiaoyw/this_light_bulb_in_our_walkin_fridge/)
 - [Perl script to import errata](https://github.com/rdrgmnzs/pulp_centos_errata_import/)
-- [Lines 155-156 of perl script](https://github.com/rdrgmnzs/pulp_centos_errata_import/blob/master/errata_import.pl#L154-L156)
+- [Lines 154-156 of perl script](https://github.com/rdrgmnzs/pulp_centos_errata_import/blob/master/errata_import.pl#L154-L156)
 - [Python script to import errata](https://github.com/nicolas-r/katello-centos-errata-import)
