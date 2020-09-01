@@ -1,5 +1,6 @@
 ---
 id: internal-virtnet-overview
+slug: /
 title: Internal.Virtnet Overview
 sidebar_label: Internal.Virtnet Overview
 ---

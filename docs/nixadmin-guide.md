@@ -16,10 +16,10 @@ This will be used as the main guide, however the other guides in Docs/Guides wil
 
 
 2) Inside of that KVM hypervisor, install a ~~Spacewalk~~ **Foreman** server. Use CentOS ~~6~~ **7** as the distro for all work below. (For bonus points, set up errata importation on the CentOS channels, so you can properly see security update advisory information.).  
-[![img](/img/Status-In-Progress-blueviolet.svg)](Foreman.md)
+[![img](/img/Status-Completed-brightgreen.svg)](Foreman.md)
 
 3) Create a VM to provide named and dhcpd service to your entire environment. Set up the dhcp daemon to use the ~~Spacewalk~~ **Foreman** server as the pxeboot machine (thus allowing you to use Cobbler to do unattended OS installs). Make sure that every forward zone you create has a reverse zone associated with it. Use something like "internal.virtnet" (but not ".local") as your internal DNS zone.  
-![img](/img/Status-Not-Started-lightgrey.svg) 
+[![img](/img/Status-In-Progress-blueviolet.svg)](dns-dhcp)
 
 4) Use that ~~Spacewalk~~ **Foreman** server to automatically (without touching it) install a new pair of OS instances, with which you will then create a Master/Master pair of LDAP servers. Make sure they register with the ~~Spacewalk~~ **Foreman** server. Do not allow anonymous bind, do not use unencrypted LDAP.  
 ![img](/img/Status-Not-Started-lightgrey.svg) 

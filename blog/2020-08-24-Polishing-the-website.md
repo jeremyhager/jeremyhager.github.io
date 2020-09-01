@@ -6,6 +6,7 @@ author_image_url: https://avatars2.githubusercontent.com/u/47301461?s=460&u=05e0
 tags: [Website, Foreman, Katello]
 description: Installing Foreman and Katello
 ---
+<img src="/img/george-foreman.png" width="256"/>
 
 The website is almost finished! I feel I can start focusing on Linux again. I also read about RedHat Developer Subscription, which allows you to use RedHat for free, with some limitations of course.
 

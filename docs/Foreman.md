@@ -7,7 +7,7 @@ sidebar_label: Foreman Configuration
 |Asset     |Capacity     |
 |----------|-------------|
 |CPU	   |2        	 |
-|RAM       |12288         |
+|RAM       |12288        |
 |vda       |32GB         |
 
 
@@ -36,6 +36,13 @@ sidebar_label: Foreman Configuration
 |foreman-release-scl|foreman-release-scl.noarch 0:7-3.el7|
 |centos-release-scl-rh|centos-release-scl-rh.noarch 0:2-3.el7.centos|
 |Katello|katello.noarch 0:3.16.0-1.el7|
+
+## Foreman info
+|Name   |    Spec|
+|-------|--------|
+|Product|CentOS 7|
+|Repos  |x86_64, x86_64_epel, x86_64_extras, x86_64_updates|
+|Subscriptions|CentOS 7, 206675996097|
 
 ## Other configurations
 ```plain title="/etc/hosts"

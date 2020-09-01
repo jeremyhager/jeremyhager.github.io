@@ -3,7 +3,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Internal.VirtNet',
-      items: ['internal-virtnet-overview','centos8-hypervisor','documentation-server','foreman'],
+      items: ['internal-virtnet-overview','centos8-hypervisor','documentation-server','foreman','dns-dhcp'],
 
 
     },
@@ -15,7 +15,7 @@ module.exports = {
     {
       type: 'category',
       label: 'How-To\'s',
-      items: ['installing-foreman-with-katello','configuring-foreman-terminal'],
+      items: ['base-vm-server-setup','installing-foreman-with-katello','configuring-foreman-terminal'],
     },
   ],
 };
