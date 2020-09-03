@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[42],{96:function(a){a.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"libvirt","name":"libvirt","count":2,"permalink":"/blog/tags/libvirt"}')}}]);
