@@ -2,7 +2,6 @@
 id: setting-up-bind
 title: Setting up Bind
 sidebar_label: Setting up Bind
-tags: test
 ---
 :::info
 This guide assumes you've already gone through the [base vm server setup](base-vm-server-setup.md) tutorial.
@@ -13,7 +12,7 @@ sudo yum install bind bind-utils
 ```
 This will install bind on a machine and any dependences needed, as well as its accompanying utility package `bind-utils`.
 
-### Configure `named.conf`
+### Configure named.conf
 #### Add an ACL
 Allows dns request from the local network the BIND server is on. If this is being set up on a home network, then any device on the home network will be able to query the server.
 ```bash
@@ -40,14 +39,42 @@ Add the `named.conf.local` at the bottom of the `named.conf` file. This will be 
 include "named.conf.local";
 ```
 Note this is a relative path - so this will likely be in `/var/named/`.
-### Configure for primary DNS server
+### Create local named file
+This file will serve the local subnet the BIND server will be on. First zone statement will link the `internal.virtnet` domain file, second zone statement will create a reverse zone file. Both of these files will contain static information on the hosts we specify, specifically for the environments created within the how-to's series.
 
-```bash title="/var/named/named.conf.local"
+```clike title="/var/named/named.conf.local"
 # This file should be empty when first created
-zone "dns-dhcp.internal.virtnet" {
+zone "internal.virtnet" {
     type master;
-    file "/etc/named/zones/db.nyc3.example.com"; # zone file path
+    file "zones/internal.virtnet"; #relative zone file path
 };
+
+zone "86.168.192.in-addr.arpa" {
+    type master;
+    file "zones/86.168.192.rev";  #relative reverse zone file path for 192.168.86.0/24 subnet
+}
+```
+### Forward lookup zone
+#### Create directory and zone file
+There is not /var/named/zones by default, so it must be created:
+```bash
+sudo mkdir /var/named/zones
+```
+#### Create forward lookup zone file
+```clike title="/var/named/zones/internal.virtnet"
+@       IN      SOA     dns-dhcp.internal.virtnet. admin.internal.virtnet. (
+                              3         ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800 )   ; Negative Cache TTL
+; name servers - NS records
+    IN      NS      dns-dhcp.internal.virtnet.
+; name servers - A records
+dns-dhcp.internal.virtnet.      IN      A       192.168.86.8
+
+; 192.168.86.0/24 - A records
+foreman.internal.virtnet.       IN      A       192.168.86.10
 ```
 
 

@@ -49,6 +49,9 @@ module.exports = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Jeremy Hager. Built with Docusaurus.`,
     },
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
   },
   presets: [
     [
