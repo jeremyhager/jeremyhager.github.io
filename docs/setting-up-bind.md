@@ -52,7 +52,7 @@ zone "internal.virtnet" {
 zone "86.168.192.in-addr.arpa" {
     type master;
     file "zones/86.168.192.rev";  #relative reverse zone file path for 192.168.86.0/24 subnet
-}
+};
 ```
 ### Forward lookup zone
 #### Create directory and zone file
@@ -62,6 +62,7 @@ sudo mkdir /var/named/zones
 ```
 #### Create forward lookup zone file
 ```clike title="/var/named/zones/internal.virtnet"
+$TTL    604800
 @       IN      SOA     dns-dhcp.internal.virtnet. admin.internal.virtnet. (
                               3         ; Serial
              604800     ; Refresh
@@ -76,7 +77,118 @@ dns-dhcp.internal.virtnet.      IN      A       192.168.86.8
 ; 192.168.86.0/24 - A records
 foreman.internal.virtnet.       IN      A       192.168.86.10
 ```
+#### Reverse zone files
+```clike title="/var/named/zones/86.168.192.rev"
+$TTL    604800
+@       IN      SOA     internal.virtnet. admin.internal.virtnet. (
+                              3         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+; name servers
+        IN      NS      dns-dhcp.internal.virtnet.
 
+; PTR Records
+8       IN      PTR     dns-dhcp.internal.virtnet.      ; 192.168.86.8
+10      IN      PTR     foreman.internal.virtnet.       ; 192.168.86.10
+```
+
+### Check BIND syntax
+Double-check for any errors in the configuration:
+```bash
+sudo named-checkconf
+```
+If there are errors, `named-checkconf` will show something similar to this:
+```text
+/etc/named.conf:66: missing ';' before end of file
+```
+In this case, the `/etc/named.conf` only had 65 lines, so `named-checkconf` is actually specifying the linked file `/var/named/named.conf.local`. The file was missing a semicolon at the end.
+
+If `named-checkconf` has no response, then the configuration does not have any syntax errors.
+
+### Check for zone errors
+If the configuration syntax checks out, it's time to check for errors in the zone files.
+
+First check the forward lookup zone:
+```bash
+sudo named-checkzone internal.virtnet /var/named/zones/internal.virtnet
+```
+Example output:
+```text
+zone internal.virtnet/IN: loaded serial 3
+OK
+```
+Now check the reverse lookup zone:
+```bash
+sudo named-checkzone 86.168.192.in-addr.arpa /var/named/zones/86.168.192.rev
+```
+Example output:
+```text
+zone 86.168.192.in-addr.arpa/IN: loaded serial 3
+OK
+```
+If both commands reply `OK`, then it's time to start BIND.
+
+### Start and Enable BIND
+
+First enable the `named` service, then start the service so it's running.
+```bash
+sudo systemctl enable named
+```
+```bash
+sudo systemctl start named.
+```
+
+### Set DNS to resolve to self
+
+```text title="/etc/sysconfig/network-scripts/ifcfg-eth0"
+#Change DNS1 to localhost and optionally change DNS2 to secondary dns host
+DNS1=127.0.0.1 #Localhost
+DNS2=192.168.86.1 #local DNS server, eg. router
+```
+
+Once the changes are complete, restart the network:
+:::caution Heads up!
+If you are connected via ssh you will _may_ loose your connection. Be sure there is a way to access the vm without ssh (eg. using the console on the hypervisor) incase of a malformed network config file.
+:::
+```bash
+sudo systemctl restart network
+```
+
+### Allow DNS in firewall
+
+In order to respond to DNS requests, the final step is to add the dns service in the firewall:
+```bash
+sudo firewall-cmd --permanent --add-service=dns
+```
+Now restart the firewall so the changes take effect:
+```bash
+sudo firewall-cmd --reload
+```
+
+### Testing
+Time to test that BIND can respond to requests externally and reverse-lookups work:
+```bash title="external host"
+nslookup foreman.internal.virtnet 192.168.86.8
+```
+A response should look something like this:
+```text
+Server:         192.168.86.8
+Address:        192.168.86.8#53
+
+Name:   foreman.internal.virtnet
+Address: 192.168.86.10
+```
+
+Finally, test the reverse lookup zones are working properly:
+```bash
+nslookup 192.168.86.10 192.168.86.8
+```
+Response should look similar to this:
+```text
+10.86.168.192.in-addr.arpa      name = foreman.internal.virtnet.
+```
 
 ### Source
 - [How to configure BIND](https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-centos-7)
