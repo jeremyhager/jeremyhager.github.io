@@ -27,8 +27,8 @@ acl "trusted" {
 Allow queries to be made on the local network interface and allow any queries from the "trusted" acl.
 ```clike title="/etc/named.conf"
 options {
-    listen-on port 53 { 127.0.0.1; 192.168.86.8;}; #add the local network IP
-    ... #do NOT include these 3 dots in the file, this is just just to indicate there is likely lines between these options.
+    listen-on port 53 { 127.0.0.1; 192.168.86.8;}; //add the local network IP
+    ... //do NOT include these 3 dots in the file, this is just just to indicate there is likely lines between these options.
     allow-query     { trusted; };
     ...
 }
@@ -46,29 +46,31 @@ This file will serve the local subnet the BIND server will be on. First zone sta
 # This file should be empty when first created
 zone "internal.virtnet" {
     type master;
-    file "zones/internal.virtnet"; #relative zone file path
+    file "zones/internal.virtnet"; //relative zone file path
 };
 
 zone "86.168.192.in-addr.arpa" {
     type master;
-    file "zones/86.168.192.rev";  #relative reverse zone file path for 192.168.86.0/24 subnet
+    file "zones/86.168.192.rev";  //relative reverse zone file path for 192.168.86.0/24 subnet
 };
 ```
 ### Forward lookup zone
-#### Create directory and zone file
+#### Create zone directory
 There is not /var/named/zones by default, so it must be created:
 ```bash
 sudo mkdir /var/named/zones
 ```
 #### Create forward lookup zone file
+For the serial number, a common practice is to use the current date. For example, the serial number below means the file was last edited 2020, September 10th at 00 hours.
+This has the added benefit fin that someone reading the config file will know right away when the last change was.
 ```clike title="/var/named/zones/internal.virtnet"
 $TTL    604800
 @       IN      SOA     dns-dhcp.internal.virtnet. admin.internal.virtnet. (
-                              3         ; Serial
-             604800     ; Refresh
-              86400     ; Retry
+            2020091000  ; Serial
+            604800      ; Refresh
+            86400       ; Retry
             2419200     ; Expire
-             604800 )   ; Negative Cache TTL
+            604800 )    ; Negative Cache TTL
 ; name servers - NS records
     IN      NS      dns-dhcp.internal.virtnet.
 ; name servers - A records
@@ -77,15 +79,15 @@ dns-dhcp.internal.virtnet.      IN      A       192.168.86.8
 ; 192.168.86.0/24 - A records
 foreman.internal.virtnet.       IN      A       192.168.86.10
 ```
-#### Reverse zone files
+### Reverse zone file
 ```clike title="/var/named/zones/86.168.192.rev"
 $TTL    604800
 @       IN      SOA     internal.virtnet. admin.internal.virtnet. (
-                              3         ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
+                        2020091000  ; Serial
+                        604800      ; Refresh
+                        86400       ; Retry
+                        2419200     ; Expire
+                    604800 )        ; Negative Cache TTL
 ; name servers
         IN      NS      dns-dhcp.internal.virtnet.
 
