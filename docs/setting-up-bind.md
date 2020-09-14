@@ -54,6 +54,7 @@ zone "86.168.192.in-addr.arpa" {
     file "zones/86.168.192.rev";  //relative reverse zone file path for 192.168.86.0/24 subnet
 };
 ```
+
 ### Forward lookup zone
 #### Create zone directory
 There is not /var/named/zones by default, so it must be created:
@@ -79,6 +80,7 @@ dns-dhcp.internal.virtnet.      IN      A       192.168.86.8
 ; 192.168.86.0/24 - A records
 foreman.internal.virtnet.       IN      A       192.168.86.10
 ```
+
 ### Reverse zone file
 ```clike title="/var/named/zones/86.168.192.rev"
 $TTL    604800
