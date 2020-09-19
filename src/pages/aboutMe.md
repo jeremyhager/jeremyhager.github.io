@@ -4,7 +4,6 @@ description: About Jeremy Hager
 ---
 
 ## Hello!
-
 Hello, I'm Jeremy Hager. Nice to meet you!
 
 I am the Sr. IT Support Engineer at SkyKick - my responsibilities are focused on internal IT and range from making sure our WiFi is working, to setting up conference rooms, to help desk work, and everything in-between. You can view my full history and responsibilities on my LinkedIn page, linked below.
@@ -29,6 +28,14 @@ I'm not much of a podcaster, but I do enjoy them from time-to-time. Here is a li
 
 1. [Linux Unplugged](https://linuxunplugged.com/)
     - Very active, and interactive. They talk about interesting and cool projects, latest news about Linux and open-source.
+    - Jupiter Broadcasting as a whole is really great.
 2. [Admin Admin Podcast](https://www.adminadminpodcast.co.uk/)
     - Still updates, but only every so often. Their content is pretty good, and to me sounds like a group of people just talking about tech.
     - Works especially well if you like to feel a fly on the wall. Personally, I enjoy the format a quite a bit.
+
+## About the website
+This website is using [Docusaurus v2](https://v2.docusaurus.io/), an open-source project by Facebook. Their [GitHub](https://github.com/facebook/docusaurus) page states:
+
+> Docusaurus is a project for building, deploying, and maintaining open source project websites easily.
+
+It also includes the ability to use a blog
