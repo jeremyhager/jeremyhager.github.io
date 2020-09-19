@@ -10,3 +10,9 @@ var
 dns-dhcp
 vda
 bind-utils
+libvirt
+pxe
+Libvirt
+dhcp
+dhcpd
+Hager
