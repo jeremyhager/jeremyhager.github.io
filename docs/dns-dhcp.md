@@ -15,6 +15,7 @@ sidebar_label: dns-dhcp Configuration
 |-------|--------|
 |bind   |bind.x86_64 32:9.11.4-16.P2.el7_8.6|
 |bind-utils|bind-utils.x86_64 32:9.11.4-16.P2.el7_8.6|
+|dhcp|12:4.2.5-79.el7.centos|
 
 ## OS Info
 |Name|Spec|
@@ -28,7 +29,7 @@ sidebar_label: dns-dhcp Configuration
 |Automatic updates|False|
 |Last updated|2020-09-13|
 |Users|jeremy, root (disabled)|
-|Snapshot|1600037836|
+|Snapshot|1600037836 (dns installed and configured)|
 
 ## DNS Configuration
 ### /etc/named.conf
@@ -96,6 +97,37 @@ $TTL    604800
 8       IN      PTR     dns-dhcp.internal.virtnet.      ; 192.168.86.8
 10      IN      PTR     foreman.internal.virtnet.       ; 192.168.86.10
 ```
+## DHCP Configuration
+```clike title="/etc/dhcp/dhcp.conf"
+option domain-name "internal.virtnet";
+option domain-name-servers 192.168.86.8;
+option subnet-mask 255.255.255.0;
+default-lease-time 600;
+max-lease-time 7200;
+allow bootp;
+
+class "kvmGuests" {
+    match if substring (hardware, 1,3) = 52:54:00;
+}
+class "pxeClients" {
+    match if substring(option vendor-class-identifier, 0,9) = "PXEClient";
+    next-server 192.168.86.10;
+    filename "pxelinux.0";
+}
+
+subnet 192.168.86.0 netmask 255.255.255.0 {
+    pool {
+        range 192.168.86.17 192.168.86.99;
+        option broadcast-address 192.168.86.255;
+        option routers 192.168.86.1;
+        option dynamic-bootp 192.168.86.17 192.168.86.24;
+        
+        deny unknown-clients;
+        allow members of "kvmGuests"
+    }
+}
+```
+
 ## Other configurations
 ```text title="/etc/sysconfig/network-scripts/ifcfg-eth0"
 BOOTPROTO="static"

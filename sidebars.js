@@ -15,7 +15,7 @@ module.exports = {
     {
       type: 'category',
       label: 'How-To\'s',
-      items: ['base-vm-server-setup','installing-foreman-with-katello','configuring-foreman-terminal','setting-up-bind','maintaining-dns'],
+      items: ['base-vm-server-setup','installing-foreman-with-katello','configuring-foreman-terminal','setting-up-bind','maintaining-dns','setting-up-dhcp'],
     },
   ],
 };
