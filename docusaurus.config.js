@@ -52,6 +52,10 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    algolia: {
+      apiKey: 'apiKey',
+      indexName: 'yugawa-website',
+    },
   },
   presets: [
     [

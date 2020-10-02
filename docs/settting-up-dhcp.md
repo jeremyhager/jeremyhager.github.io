@@ -17,7 +17,7 @@ The configuration for DHCP will include a few global defaults as well as allow b
 
 Finally there are a few statements about bootp and pxeclients. These statements will point any network-boot clients to the pxe server (which is Foreman.internal.virtnet) and to have the pxe client ask for a file called 'pxelinux.0'.
 
-```clike title="/etc/dhcp/dhcp.conf"
+```clike title="/etc/dhcp/dhcpd.conf"
 option domain-name "internal.virtnet"; //default domain
 option domain-name-servers 192.168.86.8; //dns server(s)
 option subnet-mask 255.255.255.0; //subnet mask for the subnet

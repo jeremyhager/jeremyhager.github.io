@@ -12,3 +12,9 @@ sidebar_label: Internal.Virtnet Overview
 :::tip Image hard to see?
 If image is too small to view, open it in a new tab - it also includes links to the relevant docs!
 :::
+
+|Machine|fqdn|IP|
+|-------|----|--|
+|[Hypervisor](centos8-hypervisor.md)|Centos8|DHCP|
+|[Foreman](Foreman.md)|foreman.internal.virtnet|192.168.86.10|
+|[DNS and DHCP](dns-dhcp.md)|dns-dhcp.internal.virtnet|192.168.86.8|
