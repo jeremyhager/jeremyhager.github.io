@@ -6,13 +6,13 @@ description: About Jeremy Hager
 ## Hello!
 Hello, I'm Jeremy Hager. Nice to meet you!
 
-I am the Sr. IT Support Engineer at SkyKick - my responsibilities are focused on internal IT and range from making sure our WiFi is working, to setting up conference rooms, to help desk work, and everything in-between. You can view my full history and responsibilities on my LinkedIn page, linked below.
+I am the Sr. IT Support Engineer at my work - my responsibilities are focused on internal IT and range from making sure our WiFi is working, to setting up conference rooms, to help desk work, to setting up new accounts, and everything in-between. You can view my full history and responsibilities on my LinkedIn page, linked below.
 
-Internal IT at SkyKick is all Microsoft-based, so when I'm at home I'm diving into the world of open source enterprise. You can view the current documentation [here](/docs), otherwise if you'd like to read about my progress and approaches read about in the blog section of my website [here](/blog).
+Internal IT where I work is all Microsoft-based, so when I'm at home I'm diving into the world of open source enterprise. For my personal at-home environment, discoveries, and other personal accomplishments I've done I am documenting on this website. You can view the current documentation [here](/docs), or if you'd like to read about my progress and personal approaches read about in the blog section of the website [here](/blog).
 
 If you'd like to connect with me you can feel free to reach out via LinkedIn or follow me on GitHub.  
-[![GitHub followers](../../static/img/GitHub.svg)](https://github.com/jeremyhager/)
 [![Connect via LinkedIn](../../static/img/LinkedIn.svg)](https://www.linkedin.com/in/hagerjeremy/)
+[![GitHub followers](../../static/img/GitHub.svg)](https://github.com/jeremyhager/)
 
 ## Other blogs/sites that are interesting
 As I discover good blogs/sites to use for reference I'll put them here.
@@ -38,4 +38,4 @@ This website is using [Docusaurus v2](https://v2.docusaurus.io/), an open-source
 
 > Docusaurus is a project for building, deploying, and maintaining open source project websites easily.
 
-It also includes the ability to use a blog
+It also includes the ability to use a blog, which ended up being the prefect combination for my website.
