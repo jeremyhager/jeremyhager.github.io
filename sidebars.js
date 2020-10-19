@@ -3,7 +3,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Internal.VirtNet',
-      items: ['internal-virtnet-overview','centos8-hypervisor','documentation-server','foreman','dns-dhcp'],
+      items: ['internal-virtnet-overview','centos8-hypervisor','documentation-server','foreman','dns-dhcp','pfsense-router'],
 
 
     },
@@ -15,7 +15,7 @@ module.exports = {
     {
       type: 'category',
       label: 'How-To\'s',
-      items: ['base-vm-server-setup','installing-foreman-with-katello','configuring-foreman-terminal','setting-up-bind','maintaining-dns','setting-up-dhcp'],
+      items: ['base-vm-server-setup','installing-foreman-with-katello','configuring-foreman-terminal','setting-up-bind','maintaining-dns','setting-up-dhcp','creating-new-network','pfsense-as-vm'],
     },
   ],
 };

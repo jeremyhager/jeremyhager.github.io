@@ -53,7 +53,7 @@ module.exports = {
       respectPrefersColorScheme: true,
     },
     algolia: {
-      apiKey: 'apiKey',
+      apiKey: '3b707778b5f640b9081fe2faed46782a',
       indexName: 'yugawa-website',
     },
   },

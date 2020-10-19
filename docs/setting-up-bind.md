@@ -27,7 +27,7 @@ acl "trusted" {
 Allow queries to be made on the local network interface and allow any queries from the "trusted" acl.
 ```clike title="/etc/named.conf"
 options {
-    listen-on port 53 { 127.0.0.1; 192.168.86.8;}; //add the local network IP
+    listen-on port 53 { 127.0.0.1; 172.16.0.8;}; //add the local network IP
     ... //do NOT include these 3 dots in the file, this is just just to indicate there is likely lines between these options.
     allow-query     { trusted; };
     ...
@@ -75,7 +75,7 @@ $TTL    604800
 ; name servers - NS records
     IN      NS      dns-dhcp.internal.virtnet.
 ; name servers - A records
-dns-dhcp.internal.virtnet.      IN      A       192.168.86.8
+dns-dhcp.internal.virtnet.      IN      A       172.16.0.8
 
 ; 192.168.86.0/24 - A records
 foreman.internal.virtnet.       IN      A       192.168.86.10
@@ -94,7 +94,7 @@ $TTL    604800
         IN      NS      dns-dhcp.internal.virtnet.
 
 ; PTR Records
-8       IN      PTR     dns-dhcp.internal.virtnet.      ; 192.168.86.8
+8       IN      PTR     dns-dhcp.internal.virtnet.      ; 172.16.0.8
 10      IN      PTR     foreman.internal.virtnet.       ; 192.168.86.10
 ```
 
@@ -174,12 +174,12 @@ sudo firewall-cmd --reload
 ### Testing
 Time to test that BIND can respond to requests externally and reverse-lookups work:
 ```bash title="external host"
-nslookup foreman.internal.virtnet 192.168.86.8
+nslookup foreman.internal.virtnet 172.16.0.8
 ```
 A response should look something like this:
 ```text
-Server:         192.168.86.8
-Address:        192.168.86.8#53
+Server:         172.16.0.8
+Address:        172.16.0.8#53
 
 Name:   foreman.internal.virtnet
 Address: 192.168.86.10
@@ -187,7 +187,7 @@ Address: 192.168.86.10
 
 Finally, test the reverse lookup zones are working properly:
 ```bash
-nslookup 192.168.86.10 192.168.86.8
+nslookup 192.168.86.10 172.16.0.8
 ```
 Response should look similar to this:
 ```text
