@@ -8,14 +8,14 @@ sidebar_label: Base vm server setup
 On the hypervisor run the following command:
 ```bash
 sudo virt-install --connect qemu:///system \
-     --network=bridge:virbr0 \ #this is the name of the network "switch" to connect to
+     --network=bridge:VMnetwork \ #this is the name of the network "switch" to connect to
      --initrd-inject="/home/jeremy/ks.cfg" \ #inject the kickstart file to the vm
      --extra-args="ks=file:/ks.cfg console=ttyS0" \ #boot args: use the kickstart file and connect to the console
      -n $serverName \ #the name of the vm
      -f /home/imgs/$serverName.img \ #location and name of vm image
      -r 1024 \ #startup ram
      -s 12 \ #hard drive size
-     --location=/home/isos/CentOS-7-x86_64-DVD-1908.iso \ /#iso location to boot from
+     --location=/home/isos/CentOS-7-x86_64-DVD-1908.iso \ #iso location to boot from
      --os-type=centos7.0 \ #os type info
      --accelerate --hvm --graphics none #accelerate: use KVM, hvm: full hardware virtualization, graphics none: no grahpics support
 ```
@@ -52,7 +52,7 @@ IPADDR=192.168.86.10 #Set the IP address.
 NETMASK=255.255.255.0 #Subnet mask
 NETWORK=192.168.86.0 #Network ID
 GATEWAY=192.168.86.1 #Gateway
-BRAODCAST=192.168.1.255 #Broadcast
+BROADCAST=192.168.1.255 #Broadcast
 DNS1=192.168.86.1 #Internal DNS server
 DNS2=8.8.8.8 #External DNS server
 ```
