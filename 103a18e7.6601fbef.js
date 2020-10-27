@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[8],{59:function(p){p.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"dhcpd","name":"dhcpd","count":1,"permalink":"/blog/tags/dhcpd"}')}}]);
