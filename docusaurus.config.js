@@ -6,7 +6,7 @@ module.exports = {
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'jeremyhager', // Usually your GitHub org/user name.
-  projectName: 'jeremyhager.github.io', // Usually your repo name.
+  projectName: 'yugawa-website', // Usually your repo name.
   themeConfig: {
     navbar: {
       title: 'Yugawa',
