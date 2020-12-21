@@ -25,27 +25,27 @@ $TTL    604800
 #### Add A record:
 ```clike title="/var/named/zones/internal.virtnet"
 //beginning of config clipped for brevity
-; 192.168.86.0/24 - A records
-foreman.internal.virtnet.       IN      A       192.168.86.10
-ldap1.internal.virtnet          IN      A       192.168.86.11 //new entry
-ldap2.internal.virtnet          IN      A       192.168.86.12 //new entry
+; 172.16.0.0/16 - A records
+foreman.internal.virtnet.       IN      A       172.16.0.10
+ldap1.internal.virtnet          IN      A       172.16.0.11 //new entry
+ldap2.internal.virtnet          IN      A       172.16.0.12 //new entry
 ```
 
 ### Add record in reverse lookup zone file:
 #### Increment serial
-```clike title="/var/named/zones/86.168.192.rev"
+```clike title="/var/named/zones/16.172.rev"
 $TTL    604800
 @       IN      SOA     internal.virtnet. admin.internal.virtnet. (
             2020091010  ; Serial //old value of serial was 2020091000
 //rest of config clipped for brevity
 ```
-```clike title="/var/named/zones/86.168.192.rev"
+```clike title="/var/named/zones/16.172.rev"
 //beginning of config clipped for brevity
 ; PTR Records
-8       IN      PTR     dns-dhcp.internal.virtnet.      ; 192.168.86.8
-10      IN      PTR     foreman.internal.virtnet.       ; 192.168.86.10
-11      IN      PTR     ldap1.internal.virtnet.         ; 192.168.86.11
-12      IN      PTR     ldap2.internal.virtnet.         ; 192.168.86.12
+0.8       IN      PTR     dns-dhcp.internal.virtnet.      ; 172.16.0.8
+0.10      IN      PTR     foreman.internal.virtnet.       ; 172.16.0.10
+0.11      IN      PTR     ldap1.internal.virtnet.         ; 172.16.0.11
+0.12      IN      PTR     ldap2.internal.virtnet.         ; 172.16.0.12
 ```
 
 ### Reload named

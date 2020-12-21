@@ -24,7 +24,13 @@ sidebar_label: Foreman Configuration
 |Automatic updates| False |
 |Last updated| 2020-08-24 |
 |Users  | jeremy, root (disabled)|
-|Snapshot|1598279687, 2020-08-24| 
+
+
+## Snapshot info
+|Name      |Description                            |
+|----------|---------------------------------------|
+|1608220974|GPG keys created, repos not yet created|
+|1608230943|repos created and foreman backed up    |
 
 ## Package Info
 |Name   | Spec   |

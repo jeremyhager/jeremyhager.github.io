@@ -16,3 +16,12 @@ Libvirt
 dhcp
 dhcpd
 Hager
+ldap
+postgresql
+iscsitgt
+bacula
+httpd
+nagios
+virtnet
+iscsitgt-nfs.internal.virtnet
+freeipa

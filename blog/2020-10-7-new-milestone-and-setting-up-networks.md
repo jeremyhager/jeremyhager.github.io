@@ -6,6 +6,7 @@ author_image_url: https://avatars2.githubusercontent.com/u/47301461?s=460&u=05e0
 tags: [named, dhcpd, Libvirt]
 description: Setting up named and dhcpd, troubleshooting libvirt and pxe, and setting up a network for libvirt.
 ---
+<img src="/img/here-there-be-dragons.png" width="256"/>
 
 I've been busy! I created a new vm, [dns-dhcp](/docs/dns-dhcp) which will serve my dns and dhcp for the `internal.virtnet` environment. I configured dhcp to only hand out addresses to libvirt vms (they all start with `52:54:00`), I've spent a few hours a day trying to find out why pxe boot wasn't working on libvirt, and finally realized I had to create a new network for my environment.
 

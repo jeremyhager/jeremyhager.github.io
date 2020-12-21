@@ -4,12 +4,8 @@ title: Documentation Configuration
 sidebar_label: Documentation Configuration
 ---
 
-:::info Latest Documentation
-Until CI/CD is in place, the latest documentation will be at https://github.com/jeremyhager/yugawa-website.
-:::
-
 ### Public documentation
-Currently be found at: https://yugawa.xyz/docs
+Currently be found at: https://yugawa.xyz/docs. A [CI/CD](https://github.com/jeremyhager/yugawa-website/blob/master/.github/workflows/documentation.yml) is in place to automatically deploy code from the master branch to the gh-pages branch of this repository. 
 
 
 ### Main Setup
