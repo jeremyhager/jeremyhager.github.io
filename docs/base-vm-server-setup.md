@@ -8,26 +8,22 @@ sidebar_label: Base vm server setup
 On the hypervisor run the following command:
 ```bash
 sudo virt-install --connect qemu:///system \
-     --network=bridge:VMnetwork \ #this is the name of the network "switch" to connect to
-     --initrd-inject="/home/jeremy/ks.cfg" \ #inject the kickstart file to the vm
-     --extra-args="ks=file:/ks.cfg console=ttyS0" \ #boot args: use the kickstart file and connect to the console
-     -n $serverName \ #the name of the vm
-     -f /home/imgs/$serverName.img \ #location and name of vm image
-     -r 1024 \ #startup ram
-     -s 12 \ #hard drive size
-     --location=/home/isos/CentOS-7-x86_64-DVD-1908.iso \ #iso location to boot from
-     --os-type=centos7.0 \ #os type info
-     --accelerate --hvm --graphics none #accelerate: use KVM, hvm: full hardware virtualization, graphics none: no grahpics support
+     --network=bridge:VMnetwork \
+     --initrd-inject="/home/jeremy/ks.cfg" \
+     --extra-args="ks=file:/ks.cfg console=ttyS0" \
+     -n $serverName \
+     -f /home/imgs/$serverName.img \
+     -r 1024 \
+     -s 12 \
+     --location=/home/isos/CentOS-7-x86_64-DVD-1908.iso \
+     --os-type=centos7.0 \
+     --accelerate --hvm --graphics none
 ```
 :::note
 This tutorial assumes ssh has been enabled via the kickstart file.
 :::
 ## Configure VM
-### Update
-Once completed, the Anaconda installer should pop up and afterward a login prompt to `localhost`. Login as the user set up in the kickstart file. Next thing to do is update.
-```bash
-sudo yum -y update
-```
+
 ### Change hostname
 Change the hostname to something easy to remember and meaningful. For example, if the vm is hosting foreman name it `foreman.internal.virtnet`.
 ```bash
@@ -48,12 +44,12 @@ _Most likely this will be `eth0`._
 Now add the following content to the interface config file (be sure to `sudo`!):
 ```text title="/etc/sysconfig/network-scripts/ifcfg-eth0"
 BOOTPROTO="static" #Switch to static IP
-IPADDR=192.168.86.10 #Set the IP address.
-NETMASK=255.255.255.0 #Subnet mask
-NETWORK=192.168.86.0 #Network ID
-GATEWAY=192.168.86.1 #Gateway
-BROADCAST=192.168.1.255 #Broadcast
-DNS1=192.168.86.1 #Internal DNS server
+IPADDR=172.16.0.10 #Set the IP address.
+NETMASK=255.255.0.0 #Subnet mask
+NETWORK=172.16.0.0 #Network ID
+GATEWAY=172.16.0.2 #Gateway
+BROADCAST=172.16.255.255 #Broadcast
+DNS1=172.16.0.8 #Internal DNS server
 DNS2=8.8.8.8 #External DNS server
 ```
 
@@ -65,33 +61,73 @@ If you are connected via ssh you will likely loose your connection. Be sure ther
 sudo systemctl restart network
 ```
 
+Finally, update the VM:
+```bash
+sudo yum -y update
+```
+
 ## Wrapping up
 You should now have a fully updated vm with the appropriate amount of ram, storage, and cpu power. Along with ssh enabled and a hostname to boot. Specific how-tos can be viewed on the sidebar.
 
 ## Troubleshooting
-### If you created a new network on the hypervisor and need to set the IP address
-You may be needing to set the IP address for the "same" interface, eg. eth0, even though it's now connected to a different network. One thing that must be done is to replace the mac address in the `ifcfg-eth0` file. This can be easily scripted, as follows:
-```bash title="~/replace-mac.sh"
-#!/bin/sh
-#finds current mac address then replaces it in ifcfg-eth0, but only if they are different
-
-ifcfg_mac=`grep HWADDR /etc/sysconfig/network-scripts/ifcfg-eth0 | awk -F "=" '{print $2}'`
-mac=`ip addr show eth0 | awk 'FNR == 2 {print $2}'`
-
-if [ "${ifcfg_mac,,}" != "${mac,,}" ]; then
-     echo "ip mac and ifcfg mac are different, changing ifcfg mac now."
-     sed -i "/HWADDR/ s/="[^"][^"]*"/="$mac"/" /etc/sysconfig/network-scripts/ifcfg-eth0
-     #thanks to this link for the command: https://stackoverflow.com/a/30637209
-elif [ "${ifcfg_mac,,}" = "${mac,,}" ]; then
-     echo "IP mac and ifcfg mac are the same, nothing to do."
-else
-     echo "Either the mac addresses could not be compaired, or the script has failed in some fasion."
-fi
+### Expanding memory
+Shutdown VM, edit xml, then start:
+```bash title="virsh"
+shutdown foreman
+edit foreman
+# old value
+<memory unit='MiB'>1024</memory>
+<currentMemory unit='KiB'>1048576</currentMemory>
+# new value
+<memory unit='MiB'>8192</memory>
+#delete <currentMemory unit='KiB'>1048576</currentMemory>
+#save
+start foreman
 ```
-#### How do you know it worked?
+### Expanding storage
+Shutdown VM and list the volumes for the vm:
+```bash title="virsh"
+shutdown foreman
+domblklist foreman
+```
+use `qemu-img` to resize:
 ```bash
-ip addr show eth0 | grep ether && grep HWADDR /etc/sysconfig/network-scripts/ifcfg-eth0
+#set the size
+sudo qemu-img resize /home/imgs/foreman.img 32G
 ```
-#### Machine may need to be rebooted
-After setting the IP the machine may need to be rebooted for the changes to take affect.
-
+Start the VM back up:
+```bash title="virsh"
+#check the command worked
+domblkinfo foreman vda --human
+start foreman
+```
+<!--
+Expand the storage within the VM:
+```bash title="foreman"
+#get storage mount point info
+lsblk
+sudo fdisk /dev/vda
+p
+d
+#(select default, eg. 3)
+n
+p
+#(select default, eg. 3)
+#(enter sector number from earlier p command, eg.: 10487808 - this should be default/enter anyway)
+#hit enter for last sector
+t
+#(select default, eg. 3)
+8e
+w
+```
+Check the size of vda has expanded:
+```bash title="" {4}
+lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sr0     11:0    1 1024M  0 rom
+vda    253:0    0   32G  0 disk
+├─vda1 253:1    0    4G  0 part /
+├─vda2 253:2    0    1G  0 part [SWAP]
+└─vda3 253:3    0    7G  0 part /var
+```
+-->

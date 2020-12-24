@@ -20,7 +20,7 @@ sudo vi /etc/named.conf
 ```
 ```clike title="/etc/named.conf"
 acl "trusted" {
-    localnets
+    localnets;
 };
 ```
 #### Configure `options` statement
@@ -49,9 +49,9 @@ zone "internal.virtnet" {
     file "zones/internal.virtnet"; //relative zone file path
 };
 
-zone "86.168.192.in-addr.arpa" {
+zone "16.172.in-addr.arpa" {
     type master;
-    file "zones/86.168.192.rev";  //relative reverse zone file path for 192.168.86.0/24 subnet
+    file "zones/16.172.rev";  //relative reverse zone file path for 172.16.0.0/16 subnet
 };
 ```
 
@@ -77,12 +77,26 @@ $TTL    604800
 ; name servers - A records
 dns-dhcp.internal.virtnet.      IN      A       172.16.0.8
 
-; 192.168.86.0/24 - A records
-foreman.internal.virtnet.       IN      A       192.168.86.10
+; 172.16.0.0/16 - A records
+foreman.internal.virtnet.       IN      A       172.16.0.10
+ldap1.internal.virtnet.         IN      A       172.16.0.11
+ldap2.internal.virtnet.         IN      A       172.16.0.12
+postgresql1.internal.virtnet.   IN      A       172.16.0.13
+postgresql2.internal.virtnet.   IN      A       172.16.0.14
+iscsitgt-nfs.internal.virtnet.  IN      A       172.16.0.15
+bacula.internal.virtnet.        IN      A       172.16.0.16
+httpd1.internal.virtnet.        IN      A       172.16.0.17
+httpd2.internal.virtnet.        IN      A       172.16.0.18
+tomcat1.internal.virtnet.       IN      A       172.16.0.19
+tomcat2.internal.virtnet.       IN      A       172.16.0.20
+iptables.internal.virtnet.      IN      A       172.16.0.21
+postfix.internal.virtnet.       IN      A       172.16.0.22
+nagios.internal.virtnet.        IN      A       172.16.0.23
+syslog.internal.virtnet.        IN      A       172.16.0.24
 ```
 
 ### Reverse zone file
-```clike title="/var/named/zones/86.168.192.rev"
+```clike title="/var/named/zones/16.172.rev"
 $TTL    604800
 @       IN      SOA     internal.virtnet. admin.internal.virtnet. (
                         2020091000  ; Serial
@@ -94,8 +108,22 @@ $TTL    604800
         IN      NS      dns-dhcp.internal.virtnet.
 
 ; PTR Records
-8       IN      PTR     dns-dhcp.internal.virtnet.      ; 172.16.0.8
-10      IN      PTR     foreman.internal.virtnet.       ; 192.168.86.10
+8.0     IN      PTR     dns-dhcp.internal.virtnet.      ; 172.16.0.8
+10.0    IN      PTR     foreman.internal.virtnet.       ; 172.16.0.10
+11.0	IN	    PTR	    ldap1.internal.virtnet.	        ; 172.16.0.11
+12.0	IN	    PTR	    ldap2.internal.virtnet.	        ; 172.16.0.12
+13.0	IN	    PTR	    postgresql1.internal.virtnet.	; 172.16.0.13
+14.0	IN	    PTR	    postgresql2.internal.virtnet.	; 172.16.0.14
+15.0	IN	    PTR	    iscsitgt-nfs.internal.virtnet.	; 172.16.0.15
+16.0	IN	    PTR	    bacula.internal.virtnet.	    ; 172.16.0.16
+17.0	IN  	PTR	    httpd1.internal.virtnet.	    ; 172.16.0.17
+18.0	IN	    PTR	    httpd2.internal.virtnet.	    ; 172.16.0.18
+19.0	IN	    PTR	    tomcat1.internal.virtnet.	    ; 172.16.0.19
+20.0	IN	    PTR	    tomcat2.internal.virtnet.	    ; 172.16.0.20
+21.0	IN	    PTR	    iptables.internal.virtnet.	    ; 172.16.0.21
+22.0	IN	    PTR	    postfix.internal.virtnet.	    ; 172.16.0.22
+23.0	IN	    PTR	    nagios.internal.virtnet.	    ; 172.16.0.23
+24.0	IN	    PTR	    syslog.internal.virtnet.	    ; 172.16.0.24
 ```
 
 ### Check BIND syntax
@@ -125,11 +153,11 @@ OK
 ```
 Now check the reverse lookup zone:
 ```bash
-sudo named-checkzone 86.168.192.in-addr.arpa /var/named/zones/86.168.192.rev
+sudo named-checkzone 16.172.in-addr.arpa /var/named/zones/16.172.rev
 ```
 Example output:
 ```text
-zone 86.168.192.in-addr.arpa/IN: loaded serial 3
+zone 16.172.in-addr.arpa/IN: loaded serial 3
 OK
 ```
 If both commands reply `OK`, then it's time to start BIND.
@@ -141,7 +169,7 @@ First enable the `named` service, then start the service so it's running.
 sudo systemctl enable named
 ```
 ```bash
-sudo systemctl start named.
+sudo systemctl start named
 ```
 
 ### Set DNS to resolve to self
@@ -149,7 +177,7 @@ sudo systemctl start named.
 ```text title="/etc/sysconfig/network-scripts/ifcfg-eth0"
 #Change DNS1 to localhost and optionally change DNS2 to secondary dns host
 DNS1=127.0.0.1 #Localhost
-DNS2=192.168.86.1 #local DNS server, eg. router
+DNS2=172.16.0.1 #local DNS server, eg. router
 ```
 
 Once the changes are complete, restart the network:
@@ -182,16 +210,16 @@ Server:         172.16.0.8
 Address:        172.16.0.8#53
 
 Name:   foreman.internal.virtnet
-Address: 192.168.86.10
+Address: 172.16.0.10
 ```
 
 Finally, test the reverse lookup zones are working properly:
 ```bash
-nslookup 192.168.86.10 172.16.0.8
+nslookup 172.16.0.10 172.16.0.8
 ```
 Response should look similar to this:
 ```text
-10.86.168.192.in-addr.arpa      name = foreman.internal.virtnet.
+10.0.16.172.in-addr.arpa        name = foreman.internal.virtnet.
 ```
 
 ### Source

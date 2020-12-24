@@ -56,7 +56,7 @@ Upstream Gateway: 192.168.86.1
 ```
 
 :::caution Turn off RF1918: Block RFC1918 Private Networks
-Make sure to uncheck "Block private networks from entering via WAN, as the WAN interface is within a LAN.
+Make sure to uncheck "Block private networks from entering via WAN", as the WAN interface is within a LAN.
 :::
 
 ### LAN configuration
@@ -97,7 +97,14 @@ Add a rule to allow port 22 from the WAN net to the LAN net. This will allow a d
 ## Disable DHCP
 Go to Services -> DHCP Server -> LAN, and uncheck `Enable DHCP server on LAN interface`
 
+## Disable Hardware Checksum Offloading
+:::note
+This step is necessary in order to use the virtio network driver.
+:::
+Go to System -> Advanced -> Networking, and check "Disable hardware checksum offload". Then reboot the router.
+
 ## Sources
 - [Using the shell to open pfsense](https://forum.netgate.com/topic/22082/newbie-enable-wan-using-shell/3) <sup>[archive](https://web.archive.org/web/20201005172112if_/https://forum.netgate.com/topic/22082/newbie-enable-wan-using-shell)</sup>
 - [Default username and password for pfsense](https://docs.netgate.com/pfsense/en/latest/usermanager/defaults.html?highlight=username)
 - [Expose pfsense GUI on WAN](https://docs.netgate.com/pfsense/en/latest/recipes/remote-firewall-administration.html#i-don-t-care-about-security-how-do-i-open-access-to-the-gui)
+- [Disable Hardware Checksum Offloading](https://docs.netgate.com/pfsense/en/latest/virtualization/virtio.html#disable-hardware-checksum-offloading)

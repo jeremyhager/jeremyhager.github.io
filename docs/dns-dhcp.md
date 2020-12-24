@@ -10,18 +10,11 @@ sidebar_label: dns-dhcp Configuration
 |RAM       |2048 (MiB)   |
 |vda       |12GB         |
 
-## Package Info
-|Name   | Spec   |
-|-------|--------|
-|bind   |bind.x86_64 32:9.11.4-16.P2.el7_8.6|
-|bind-utils|bind-utils.x86_64 32:9.11.4-16.P2.el7_8.6|
-|dhcp|12:4.2.5-79.el7.centos|
-
 ## OS Info
 |Name|Spec|
 |----|----|
 |Hostname|dns-dhcp.internal.virtnet|
-|IP Address|192.168.86.8/24|
+|IP Address|172.16.0.8/24|
 |Kernel|3.10.0-1062.el7.x86_64|
 |Release|CentOS Linux release 7.8.2003 (Core)|
 |Firewall services|dhcpv6-client dns ssh|
@@ -31,17 +24,28 @@ sidebar_label: dns-dhcp Configuration
 |Users|jeremy, root (disabled)|
 |Snapshot|1600037836 (dns installed and configured)|
 
+## Package Info
+|Name   | Spec   |
+|-------|--------|
+|bind   |bind.x86_64 32:9.11.4-16.P2.el7_8.6|
+|bind-utils|bind-utils.x86_64 32:9.11.4-16.P2.el7_8.6|
+|dhcp|12:4.2.5-79.el7.centos|
+
+## Snapshot info
+|Name      |Description                            |
+|----------|---------------------------------------|
+|1608682843|Post ldap enrollment                   |
 ## DNS Configuration
 ### /etc/named.conf
 ```clike title="/etc/named.conf"
 acl "trusted" {
-    localnets
+    localnets;
 };
 ```
 
 ```clike title="/etc/named.conf"
 options {
-    listen-on port 53 { 127.0.0.1; 192.168.86.8;};
+    listen-on port 53 { 127.0.0.1; 172.16.0.8;};
     //...
     allow-query     { trusted; };
     //...
@@ -59,16 +63,16 @@ zone "internal.virtnet" {
     file "zones/internal.virtnet"; //relative zone file path
 };
 
-zone "86.168.192.in-addr.arpa" {
+zone "16.172.in-addr.arpa" {
     type master;
-    file "zones/86.168.192.rev";  //relative reverse zone file path for 192.168.86.0/24 subnet
+    file "zones/16.172.rev";  //relative reverse zone file path for 172.16.0.0/16 subnet
 };
 ```
 ### zones/internal.virtnet forward lookup zone
 ```clike title="/var/named/zones/internal.virtnet"
 $TTL    604800
 @       IN      SOA     dns-dhcp.internal.virtnet. admin.internal.virtnet. (
-            2020091000  ; Serial
+            2020121815  ; Serial
             604800      ; Refresh
             86400       ; Retry
             2419200     ; Expire
@@ -76,16 +80,30 @@ $TTL    604800
 ; name servers - NS records
     IN      NS      dns-dhcp.internal.virtnet.
 ; name servers - A records
-dns-dhcp.internal.virtnet.      IN      A       192.168.86.8
+dns-dhcp.internal.virtnet.      IN      A       172.16.0.8
 
-; 192.168.86.0/24 - A records
-foreman.internal.virtnet.       IN      A       192.168.86.10
+; 172.16.0.0/16 - A records
+foreman.internal.virtnet.       IN      A       172.16.0.10
+ldap1.internal.virtnet.         IN      A       172.16.0.11
+ldap2.internal.virtnet.         IN      A       172.16.0.12
+postgresql1.internal.virtnet.   IN      A       172.16.0.13
+postgresql2.internal.virtnet.   IN      A       172.16.0.14
+iscsitgt-nfs.internal.virtnet.  IN      A       172.16.0.15
+bacula.internal.virtnet.        IN      A       172.16.0.16
+httpd1.internal.virtnet.        IN      A       172.16.0.17
+httpd2.internal.virtnet.        IN      A       172.16.0.18
+tomcat1.internal.virtnet.       IN      A       172.16.0.19
+tomcat2.internal.virtnet.       IN      A       172.16.0.20
+iptables.internal.virtnet.      IN      A       172.16.0.21
+postfix.internal.virtnet.       IN      A       172.16.0.22
+nagios.internal.virtnet.        IN      A       172.16.0.23
+syslog.internal.virtnet.        IN      A       172.16.0.24
 ```
-### zones/86.168.192.rev reverse lookup zone
-```clike title="/var/named/zones/86.168.192.rev"
+### zones/16.172.rev reverse lookup zone
+```clike title="/var/named/zones/16.172.rev"
 $TTL    604800
 @       IN      SOA     internal.virtnet. admin.internal.virtnet. (
-                        2020091000  ; Serial
+                        2020121815  ; Serial
                         604800      ; Refresh
                         86400       ; Retry
                         2419200     ; Expire
@@ -94,48 +112,131 @@ $TTL    604800
         IN      NS      dns-dhcp.internal.virtnet.
 
 ; PTR Records
-8       IN      PTR     dns-dhcp.internal.virtnet.      ; 192.168.86.8
-10      IN      PTR     foreman.internal.virtnet.       ; 192.168.86.10
+8.0     IN      PTR     dns-dhcp.internal.virtnet.      ; 172.16.0.8
+10.0    IN      PTR     foreman.internal.virtnet.       ; 172.16.0.10
+11.0    IN      PTR     ldap1.internal.virtnet.         ; 172.16.0.11
+12.0    IN      PTR     ldap2.internal.virtnet.         ; 172.16.0.12
+13.0    IN      PTR     postgresql1.internal.virtnet.   ; 172.16.0.13
+14.0    IN      PTR     postgresql2.internal.virtnet.   ; 172.16.0.14
+15.0    IN      PTR     iscsitgt-nfs.internal.virtnet.  ; 172.16.0.15
+16.0    IN      PTR     bacula.internal.virtnet.        ; 172.16.0.16
+17.0    IN      PTR     httpd1.internal.virtnet.        ; 172.16.0.17
+18.0    IN      PTR     httpd2.internal.virtnet.        ; 172.16.0.18
+19.0    IN      PTR     tomcat1.internal.virtnet.       ; 172.16.0.19
+20.0    IN      PTR     tomcat2.internal.virtnet.       ; 172.16.0.20
+21.0    IN      PTR     iptables.internal.virtnet.      ; 172.16.0.21
+22.0    IN      PTR     postfix.internal.virtnet.       ; 172.16.0.22
+23.0    IN      PTR     nagios.internal.virtnet.        ; 172.16.0.23
+24.0    IN      PTR     syslog.internal.virtnet.        ; 172.16.0.24
 ```
 ## DHCP Configuration
-```clike title="/etc/dhcp/dhcp.conf"
-option domain-name "internal.virtnet";
-option domain-name-servers 192.168.86.8;
-option subnet-mask 255.255.255.0;
-default-lease-time 600;
-max-lease-time 7200;
-allow bootp;
+```clike title="/etc/dhcp/dhcpd.conf"
+#
+# DHCP Server Configuration file.
+#   see /usr/share/doc/dhcp*/dhcpd.conf.example
+#   see dhcpd.conf(5) man page
+#
+option domain-name "internal.virtnet"; #default domain
+#option domain-name-servers 172.16.0.8; #dns server(s)
+#option subnet-mask 255.255.0.0; #subnet mask for the subnet
+default-lease-time 14400; #lease of 14400 seconds, or 4 hours
+max-lease-time 28800; #max lease of 8 hours
+allow bootp; #allow clients to run a pxe boot
 
-class "kvmGuests" {
-    match if substring (hardware, 1,3) = 52:54:00;
-}
+#if the client is PXE, sent it to the .10 server and ask for the "pxelinux.0" file
 class "pxeClients" {
     match if substring(option vendor-class-identifier, 0,9) = "PXEClient";
-    next-server 192.168.86.10;
+    next-server 172.16.0.10;
     filename "pxelinux.0";
 }
 
-subnet 192.168.86.0 netmask 255.255.255.0 {
+#subnet for the 172.16.0.0/16 network
+subnet 172.16.0.0 netmask 255.255.0.0 {
     pool {
-        range 192.168.86.17 192.168.86.99;
-        option broadcast-address 192.168.86.255;
-        option routers 192.168.86.1;
-        option dynamic-bootp 192.168.86.17 192.168.86.24;
-        
-        deny unknown-clients;
-        allow members of "kvmGuests"
+        range 172.16.1.0 172.16.1.255; #dhcp lease range
+        option broadcast-address 172.16.255.255; #network broadcast address
+        option routers 172.16.0.2; #router or gateway configuration
+        option domain-name-servers 172.16.0.8;
+        #option dynamic-bootp 172.16.1.0 172.16.1.16;
+        #bootp or pxe clients will use the addresses 1.0 to 1.24
+        allow unknown-clients; #allow unknown clients
+        #allow any; #only any member on the network
+        default-lease-time 14400;
+        max-lease-time 28800;
+        next-server 172.16.0.10;
+        filename "pxelinux.0";
     }
+}
+
+#Static IP assignments
+host ldap1 {
+    hardware ethernet 52:54:00:00:00:11;
+    fixed-address 172.16.0.11;
+}
+host ldap2 {
+    hardware ethernet 52:54:00:00:00:12;
+    fixed-address 172.16.0.12;
+}
+host postgresql1 {
+    hardware ethernet 52:54:00:00:00:13;
+    fixed-address 172.16.0.13;
+}
+host postgresql2 {
+    hardware ethernet 52:54:00:00:00:14;
+    fixed-address 172.16.0.14;
+}
+host iscsitgt-nfs {
+    hardware ethernet 52:54:00:00:00:15;
+    fixed-address 172.16.0.15;
+}
+host bacula {
+    hardware ethernet 52:54:00:00:00:16;
+    fixed-address 172.16.0.16;
+}
+host httpd1 {
+    hardware ethernet 52:54:00:00:00:17;
+    fixed-address 172.16.0.17;
+}
+host httpd2 {
+    hardware ethernet 52:54:00:00:00:18;
+    fixed-address 172.16.0.18;
+}
+host tomcat1 {
+    hardware ethernet 52:54:00:00:00:19;
+    fixed-address 172.16.0.19;
+}
+host tomcat2 {
+    hardware ethernet 52:54:00:00:00:20;
+    fixed-address 172.16.0.20;
+}
+host iptables {
+    hardware ethernet 52:54:00:00:00:21;
+    fixed-address 172.16.0.21;
+}
+host postfix {
+    hardware ethernet 52:54:00:00:00:22;
+    fixed-address 172.16.0.22;
+}
+host nagios {
+    hardware ethernet 52:54:00:00:00:23;
+    fixed-address 172.16.0.23;
+}
+host syslog {
+    hardware ethernet 52:54:00:00:00:24;
+    fixed-address 172.16.0.24;
 }
 ```
 
 ## Other configurations
 ```text title="/etc/sysconfig/network-scripts/ifcfg-eth0"
-BOOTPROTO="static"
-IPADDR=192.168.86.8
-NETMASK=255.255.255.0
-NETWORK=192.168.86.0
-GATEWAY=192.168.86.1
-BRAODCAST=192.168.1.255
-DNS1=192.168.86.1
-DNS2=8.8.8.8
+DEVICE=eth0
+HWADDR=52:54:00:01:49:44
+BOOTPROTO=static
+ONBOOT="yes"
+IPADDR=172.16.0.8
+NETMASK=255.255.0.0
+NETWORK=172.16.0.0
+BROADCAST=172.16.255.255
+DNS1=127.0.0.1
+GATEWAY=172.16.0.2
 ```

@@ -19,16 +19,16 @@ This will be used as the main guide, however the other guides in Docs/Guides wil
 [![img](/img/Status-Completed-brightgreen.svg)](Foreman.md)
 
 3) Create a VM to provide named and dhcpd service to your entire environment. Set up the dhcp daemon to use the ~~Spacewalk~~ **Foreman** server as the pxeboot machine (thus allowing you to use Cobbler to do unattended OS installs). Make sure that every forward zone you create has a reverse zone associated with it. Use something like "internal.virtnet" (but not ".local") as your internal DNS zone.  
-[![img](/img/Status-In-Progress-blueviolet.svg)](dns-dhcp)
+[![img](/img/Status-Completed-brightgreen.svg)](dns-dhcp.md)
 
 4) Use that ~~Spacewalk~~ **Foreman** server to automatically (without touching it) install a new pair of OS instances, with which you will then create a Master/Master pair of LDAP servers. Make sure they register with the ~~Spacewalk~~ **Foreman** server. Do not allow anonymous bind, do not use unencrypted LDAP.  
-![img](/img/Status-Not-Started-lightgrey.svg) 
+[![img](/img/Status-Completed-brightgreen.svg)](ldap1-ldap2)
 
 5) Reconfigure all 3 servers to use LDAP authentication. _(use `freeipa`)_  
-![img](/img/Status-Not-Started-lightgrey.svg) 
+[![img](/img/Status-Completed-brightgreen.svg)](enrolling-foreman-ldap)
 
 6) Create two new VMs, again unattendedly, which will then be Postgresql VMs. Use pgpool-II to set up master/master replication between them. Export the database from your ~~Spacewalk~~ **Foreman** server and import it into the new pgsql cluster. Reconfigure your ~~Spacewalk~~ **Foreman** instance to run off of that server.  
-![img](/img/Status-Not-Started-lightgrey.svg) 
+[![img](/img/Status-In-Progress-blueviolet.svg)](ldap1-ldap2)
 
 7) Set up a Puppet Master. Plug it into the ~~Spacewalk~~ **Foreman** server for identifying the inventory it will need to work with. (Cheat and use ansible for deployment purposes, again plugging into the ~~Spacewalk~~ **Foreman** server.)    
 ![img](/img/Status-Not-Started-lightgrey.svg) 

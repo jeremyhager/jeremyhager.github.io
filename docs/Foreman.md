@@ -23,8 +23,14 @@ sidebar_label: Foreman Configuration
 |Interfaces| eth0 |
 |Automatic updates| False |
 |Last updated| 2020-08-24 |
-|Users  | jeremy, root (disabled)|
-|Snapshot|1598279687, 2020-08-24| 
+|Users  | jeremy (local), root (disabled)|
+
+
+## Snapshot info
+|Name      |Description                            |
+|----------|---------------------------------------|
+|1608615128|Before foreman was enrolled in ldap    |
+|1608682531|Post ldap enrollment, pre db migration |
 
 ## Package Info
 |Name   | Spec   |

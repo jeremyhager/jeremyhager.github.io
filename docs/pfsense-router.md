@@ -25,6 +25,11 @@ sidebar_label: PfSense Router
 |Users  | admin|
 |Snapshot|1602169002| 
 
+## Snapshot info
+|Name      |Description    |
+|----------|---------------|
+|1608682916|(no special snapshot, created 2020-12-22)
+
 ## WAN Rules
 |Rule   |    Description|
 |-------|---------------|
