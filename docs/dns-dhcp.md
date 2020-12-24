@@ -31,6 +31,10 @@ sidebar_label: dns-dhcp Configuration
 |bind-utils|bind-utils.x86_64 32:9.11.4-16.P2.el7_8.6|
 |dhcp|12:4.2.5-79.el7.centos|
 
+## Snapshot info
+|Name      |Description                            |
+|----------|---------------------------------------|
+|1608682843|Post ldap enrollment                   |
 ## DNS Configuration
 ### /etc/named.conf
 ```clike title="/etc/named.conf"

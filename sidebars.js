@@ -25,7 +25,18 @@ module.exports = {
             'creating-foreman-hosts'
           ],
         },
-        'provisioning-ldap',
+        {
+          type: 'category',
+          label: 'LDAP',
+          items: [
+            'setting-up-ldap-servers',
+            'configuring-ldap',
+            'creating-ldap-users',
+            'enrolling-foreman-ldap',
+            'manual-enrollment-ldap',
+          ],
+        },
+        'postgres-setup',
       ],
     },
     {

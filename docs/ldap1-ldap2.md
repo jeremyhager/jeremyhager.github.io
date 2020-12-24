@@ -21,11 +21,18 @@ sidebar_label: Ldap servers
 |Interfaces       |eth0                                     |eth0
 |Automatic updates|False                                    |False
 |Last updated     |2020-09-13                               |2020-12-28
-|Users            |jeremy, root (disabled)                  |root
-|Snapshot         |1600037836 (dns installed and configured)|
+|Users            |jeremy (ldap), root (disabled)                  |root
+
 
 ## Package Info
 
 ## Snapshot info
-
+### ldap1
+|Name      |Description                            |
+|----------|---------------------------------------|
+|1608682711|ldap set up and ready to go            |
+### ldap2
+|Name      |Description                            |
+|----------|---------------------------------------|
+|1608682789|ldap set up and ready to go            |
 ## LDAP configuration

@@ -1,7 +1,7 @@
 ---
-id: provisioning-ldap
-title: Provisioning ldap
-sidebar_label: Provisioning ldap
+id: setting-up-ldap-servers
+title: Setting up ldap servers
+sidebar_label: Setting up ldap servers
 ---
 
 Now that Foreman is set up to provision hosts and DHCP is pointed to the Foreman server, it's time to set up the ldap servers.
@@ -42,14 +42,6 @@ sudo virt-install --connect qemu:///system \
 ```bash title="ldap services"
 firewall-cmd --add-service=freeipa-ldap --add-service=freeipa-ldaps
 firewall-cmd --add-service=freeipa-ldap --add-service=freeipa-ldaps --permanent
-```
-```bash title="test"
-* 80, 443: HTTP/HTTPS
-                  * 389, 636: LDAP/LDAPS
-                  * 88, 464: kerberos
-                UDP Ports:
-                  * 88, 464: kerberos
-                  * 123: ntp
 ```
 ### Install freeipa:
 ```bash
@@ -120,21 +112,64 @@ Be sure to back up the CA certificates stored in /root/cacert.p12
 These files are required to create replicas. The password for these
 files is the Directory Manager passwordmy 
 ```
-## Set up ldap2
-### 
+## Enroll ldap2
+### On ldap2
+Now that ldap1 is the master ldap server, join the ldap2 as a client to the domain:
 ```bash
-ipa-client-install \ 
-    --domain=internal.virtnet \
-    --realm=INTERNAL.VIRTNET \
-    --server=ldap1.internal.virtnet
+ipa-client-install --domain=internal.virtnet --realm=INTERNAL.VIRTNET --server=ldap1.internal.virtnet
 ```
 
 |Questions|Answers|
 |---------|-------|
-|Configure BIND?| No|
-|Server hostname| \[ldap1.internal.virtnet\] \[ENTER\]|
-|Confirm domain | \[internal.virtnet\] \[Enter\]|
-|Confirm realm  | \[INTERNAL.VIRTNET\] \[Enter\]|
-|Directory Manager password| Super secure password|
-|IPA admin password| Also secure password|
-|Continue to configure the system with these values?| yes|
+|Proceed with fixed values and no DNS discovery? [no]:| yes|
+|Continue to configure the system with these values? [no]| yes|
+|User authorized to enroll computers: | admin|
+|Password for admin@INTERNAL.VIRTNET:| \[admin password\]|
+
+```text title="expected output"
+Successfully retrieved CA cert
+    Subject:     CN=Certificate Authority,O=INTERNAL.VIRTNET
+    Issuer:      CN=Certificate Authority,O=INTERNAL.VIRTNET
+    Valid From:  2020-12-19 00:23:18
+    Valid Until: 2040-12-19 00:23:18
+
+Enrolled in IPA realm INTERNAL.VIRTNET
+
+...
+```
+### On ldap1
+Authenticate as admin and add ldap2 as a member of the `ipaservers` group:
+```bash
+kinit admin
+```
+```bash
+ipa hostgroup-add-member ipaservers --hosts ldap2.internal.virtnet
+```
+```text title="expected output"
+Host-group: ipaservers
+  Description: IPA server hosts
+  Member hosts: ldap1.internal.virtnet, ldap2.internal.virtnet
+-------------------------
+Number of members added 1
+-------------------------
+```
+Confirm both the group and severs show up with the following commands:
+```bash
+ipa hostgroup-find
+ipa host-find --in-hostgroups=ipaservers
+```
+### On ldap2
+Once successfully added, run the following command to add ldap2 as a replica:
+```bash
+ipa-replica-install
+```
+Finally, run `ipa-ca-install` as recommended:
+```bash
+ipa-ca-install
+```
+:::note
+This will require the directory manager's password. Additionally, this will take some time.
+:::
+
+## Sources
+- [freeipa replica setup](https://www.freeipa.org/page/V4/Replica_Setup)

@@ -79,6 +79,20 @@ dns-dhcp.internal.virtnet.      IN      A       172.16.0.8
 
 ; 172.16.0.0/16 - A records
 foreman.internal.virtnet.       IN      A       172.16.0.10
+ldap1.internal.virtnet.         IN      A       172.16.0.11
+ldap2.internal.virtnet.         IN      A       172.16.0.12
+postgresql1.internal.virtnet.   IN      A       172.16.0.13
+postgresql2.internal.virtnet.   IN      A       172.16.0.14
+iscsitgt-nfs.internal.virtnet.  IN      A       172.16.0.15
+bacula.internal.virtnet.        IN      A       172.16.0.16
+httpd1.internal.virtnet.        IN      A       172.16.0.17
+httpd2.internal.virtnet.        IN      A       172.16.0.18
+tomcat1.internal.virtnet.       IN      A       172.16.0.19
+tomcat2.internal.virtnet.       IN      A       172.16.0.20
+iptables.internal.virtnet.      IN      A       172.16.0.21
+postfix.internal.virtnet.       IN      A       172.16.0.22
+nagios.internal.virtnet.        IN      A       172.16.0.23
+syslog.internal.virtnet.        IN      A       172.16.0.24
 ```
 
 ### Reverse zone file
