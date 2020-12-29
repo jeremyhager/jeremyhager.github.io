@@ -21,8 +21,9 @@ module.exports = {
           items: [
             'installing-foreman-with-katello',
             'configuring-foreman-terminal',
+            'foreman-content-keys-backup',
             'tftp-with-foreman',
-            'creating-foreman-hosts'
+            'creating-foreman-hosts',
           ],
         },
         {
@@ -36,7 +37,14 @@ module.exports = {
             'manual-enrollment-ldap',
           ],
         },
-        'postgres-setup',
+        {
+          type: 'category',
+          label: 'Postgresql',
+          items: [
+            'postgres-prereqs',
+            'postgres-setup',
+          ],
+        },
       ],
     },
     {

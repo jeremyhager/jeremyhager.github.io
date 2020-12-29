@@ -5,6 +5,22 @@ sidebar_label: Setting up ldap servers
 ---
 
 Now that Foreman is set up to provision hosts and DHCP is pointed to the Foreman server, it's time to set up the ldap servers.
+## Create hosts on Foreman
+```bash title="ldap1"
+hammer host create \
+        --name "ldap1.internal.virtnet" \
+        --hostgroup "centos7-group" \
+        --interface "type=interface,mac=52:54:00:00:00:11,ip=172.16.0.11,managed=true,primary=true,provision=true" \
+        --location "Default Location"
+```
+```bash title="ldap2"
+hammer host create \
+        --name "ldap2.internal.virtnet" \
+        --hostgroup "centos7-group" \
+        --interface "type=interface,mac=52:54:00:00:00:12,ip=172.16.0.12,managed=true,primary=true,provision=true" \
+        --location "Default Location"
+```
+
 ## Creating ldap VMs
 :::note
 By default the kickstart file has created only the root account. After setting up ldap the root account will be disabled.

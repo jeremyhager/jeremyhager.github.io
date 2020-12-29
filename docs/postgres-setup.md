@@ -4,38 +4,24 @@ title: Postgresql setup
 sidebar_label: Postgres setup
 ---
 
-## Refresh build token
-On the foreman server run the following:
+## Set up Postgresql
+### On both VMs
 ```bash
-hammer host update --build false --id 'postgresql1.internal.virtnet'
-hammer host update --build false --id 'postgresql2.internal.virtnet'
-hammer host update --build true --id 'postgresql1.internal.virtnet'
-hammer host update --build true --id 'postgresql2.internal.virtnet'
+sudo yum -y install postgresql12-server
+sudo postgresql-setup initdb
+sudo systemctl enable --now postgresql12-server
 ```
-## Create postgresql VMs
-On the hypervisor, run the following commands:
+## Set up pgpool
+### On postgresql1
+Install pgpool-II for postgresql 12:
+```bash
+sudo yum -y install pgpool-II-pg12
+```
+Install pgpool-II debug tool:
+```bash
+sudo yum -y install pgpool-II-pg12-debuginfo
+```
 
-```bash title="postgresql1"
-sudo virt-install --connect qemu:///system \
-    --network=bridge:VMnetwork,mac=52:54:00:00:00:13 \
-    -n postgresql1 \
-    -f /home/imgs/postgresql1.img \
-    -r 2048 \
-    -s 32 \
-    --pxe \
-    --noautoconsole \
-    --os-type=centos7.0 \
-    --accelerate --hvm --vnc
-```
-```bash title="postgresql2"
-sudo virt-install --connect qemu:///system \
-    --network=bridge:VMnetwork,mac=52:54:00:00:00:14 \
-    -n postgresql2 \
-    -f /home/imgs/postgresql2.img \
-    -r 2048 \
-    -s 32 \
-    --pxe \
-    --noautoconsole \
-    --os-type=centos7.0 \
-    --accelerate --hvm --vnc
-```
+## Sources
+- [Download [postgresql](https://www.postgresql.org/download/linux/redhat/)
+- [How to install postgresql](https://theforeman.org/plugins/katello/nightly/user_guide/remote_databases/index.html#prepare-remote-postgres)

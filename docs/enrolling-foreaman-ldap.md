@@ -85,7 +85,7 @@ sudo foreman-installer --scenario katello --foreman-proxy-realm true \
 Now that foreman is set up for realms, create a realm in foreman:
 ```bash
 hammer realm create --location "Default Location" \
-    --name "internal.virtnet_realm" \
+    --name "INTERNAL.VIRTNET" \
     --organization "internal.virtnet" \
     --realm-proxy-id 1 \
     --realm-type "FreeIPA"
@@ -94,11 +94,6 @@ hammer realm create --location "Default Location" \
 Update the hostgroup in foreman to include the realm id. This will automatically add the hosts within the group to the realm:
 ```bash
 hammer hostgroup update --id 1 --realm-id 1
-```
-## Disable root password on hostgroup
-Now that all future VMs should be joined to the realm there is no reason the root account should have a password - and thus be able to be logged in.
-```bash
-hammer hostgroup update --id 1 --ask-root-password false
 ```
 
 ## Sources
