@@ -42,7 +42,9 @@ module.exports = {
           label: 'Postgresql',
           items: [
             'postgres-prereqs',
-            'postgres-setup',
+            'postgres-pgpool-install',
+            'postgres-migration',
+            'pgpool-II-setup',
           ],
         },
       ],

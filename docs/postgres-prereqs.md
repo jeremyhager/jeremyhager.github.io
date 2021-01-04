@@ -20,7 +20,7 @@ hammer content-credentials create --content-type gpg_key --key "RPM-GPG-KEY-PGDG
 hammer repository create --product "CentOS 7" --name "pgpool_x86_64" --content-type "yum" --download-policy "on_demand" --gpg-key "RPM-GPG-KEY-PGPOOL2" --url "https://www.pgpool.net/yum/rpms/4.2/redhat/rhel-7-x86_64/" --mirror-on-sync "no"
 ```
 ```bash title="postgresql-12"
-hammer repository create --product "CentOS 7" --name "postgresql-12_x86_64" --content-type "yum" --download-policy "on_demand" --gpg-key "RPM-GPG-KEY-PGPOOL2" --url "https://ftp.postgresql.org/pub/repos/yum/12/redhat/rhel-7Server-x86_64/" --mirror-on-sync "no"
+hammer repository create --product "CentOS 7" --name "postgresql-12_x86_64" --content-type "yum" --download-policy "on_demand" --gpg-key "RPM-GPG-KEY-PGDG-12" --url "https://ftp.postgresql.org/pub/repos/yum/12/redhat/rhel-7Server-x86_64/" --mirror-on-sync "no"
 ```
 ## Sync Foreman repo
 ```bash title="pgpool-II"
@@ -45,15 +45,12 @@ hammer content-view add-repository \
 ```
 ### Publish content view
 ```bash
-hammer content-view version update --content-view "CentOS 7 Content" --version "1.0" --new-version="1.1" --description "Added pgpool-II and postgresql-12"
+hammer content-view publish --id 2 --major 1 --minor 1 --description "Added pgpool-II and postgresql-12"
 ```
 ### Promote new version
 ```bash
-hammer content-view version promote --content-view "CentOS 7 Content" --version "2.0" --to-lifecycle-environment "stable"
+hammer content-view version promote --content-view "CentOS 7 Content" --version "1.1" --to-lifecycle-environment "stable"
 ```
-:::note
-The versions are different, because the new-version did not apply exactly. As such, a different approach was needed seen in the troubleshooting section.
-:::
 
 ## Create hosts on Foreman
 ```bash title="postgresql1"
@@ -98,10 +95,41 @@ sudo virt-install --connect qemu:///system \
     --accelerate --hvm --vnc
 ```
 
+## Create ipa pgpool group and users
+### Create pgpool group
+```bash title="ldap1.internal.virtnet"
+kinit admin
+```
+```bash title="ldap1.internal.virtnet"
+ipa group-add pgpool-users --desc="pgpool-II users for replication"
+```
+### Set password to never expire
+```bash title="ldap1.internal.virtnet"
+ipa pwpolicy-add pgpool-users --maxlife=0 --minlife=0 --maxfail=5 --lockouttime=600 --priority=3
+```
+### Create pgpool and repl users
+As is recommended by the official documentation of Pgpool-II, create a user for pgpool-II to use. This will be created on the ldap servers:
+```bash title="ldap1.internal.virtnet"
+ipa user-add pgpool --first=pg --last=pool --password
+```
+```bash title="ldap1.internal.virtnet"
+ipa user-add repl --first=re --last=pl --password
+```
+Add the user to the pgpool-users group:
+```bash title="ldap1.internal.virtnet"
+ipa group-add-member pgpool-users --users={pgpool,repl}
+```
+### Sign in as pgpool users and change passwords
+```bash
+su - pgpool
+```
+```bash
+su - repl
+```
 
 ## Troubleshooting
-### Content view not promoting
-In the case above, this was due to the versions being different even though `"1.1"` was specified. Run the following to get the new version assuming the content-view id is `2`:
+### Content view version
+It may be necessary to find the current/new version of the content view. Run the following to get the new version assuming the content-view id is `2`:
 ```bash
 hammer content-view info --id 2
 ```
@@ -118,7 +146,7 @@ Versions:
 ...
 ```
 
-Above can be seen the output above, the version is `2.0` and was published later. In this case we'll need to publish version `2.0` instead of `1.1`, or `1.0` for that matter.
+Above can be seen the output above, the version is `2.0` and was published later. In this case we'll need to publish version `2.0`.
 
 ## Source
 - [Installing pgpool-II using rpms](https://www.pgpool.net/docs/latest/en/html/install-rpm.html)
