@@ -102,7 +102,7 @@ _ldap._tcp.internal.virtnet. 86400 IN SRV 0 100 389 ldap1.internal.virtnet.
 _ntp._udp.internal.virtnet. 86400 IN SRV 0 100 123 ldap1.internal.virtnet.
 ipa-ca.internal.virtnet. 86400 IN A 172.16.0.11
 ```
-
+<!--
 ```text
 The ipa-client-install command was successful
 
@@ -128,6 +128,7 @@ Be sure to back up the CA certificates stored in /root/cacert.p12
 These files are required to create replicas. The password for these
 files is the Directory Manager passwordmy 
 ```
+-->
 ## Enroll ldap2
 ### On ldap2
 Now that ldap1 is the master ldap server, join the ldap2 as a client to the domain:

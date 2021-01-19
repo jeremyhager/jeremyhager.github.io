@@ -30,6 +30,8 @@ sidebar_label: Foreman Configuration
 |Name      |Description                            |
 |----------|---------------------------------------|
 |1609372699|Pre database migration                 |
+|1609956117|Resizing /dev/vda                      |
+|1610387700|Pre database migration; databases dumped|
 
 ## Package Info
 |Name   | Spec   |

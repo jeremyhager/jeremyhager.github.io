@@ -25,3 +25,4 @@ nagios
 virtnet
 iscsitgt-nfs.internal.virtnet
 freeipa
+postgres

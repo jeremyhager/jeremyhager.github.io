@@ -98,6 +98,18 @@ iptables.internal.virtnet.      IN      A       172.16.0.21
 postfix.internal.virtnet.       IN      A       172.16.0.22
 nagios.internal.virtnet.        IN      A       172.16.0.23
 syslog.internal.virtnet.        IN      A       172.16.0.24
+
+; domain info
+_kerberos-master._tcp.internal.virtnet. 86400 IN SRV 0 100 88 ldap1.internal.virtnet.
+_kerberos-master._udp.internal.virtnet. 86400 IN SRV 0 100 88 ldap1.internal.virtnet.
+_kerberos._tcp.internal.virtnet. 86400 IN SRV 0 100 88 ldap1.internal.virtnet.
+_kerberos._udp.internal.virtnet. 86400 IN SRV 0 100 88 ldap1.internal.virtnet.
+_kerberos.internal.virtnet. 86400 IN TXT "INTERNAL.VIRTNET"
+_kpasswd._tcp.internal.virtnet. 86400 IN SRV 0 100 464 ldap1.internal.virtnet.
+_kpasswd._udp.internal.virtnet. 86400 IN SRV 0 100 464 ldap1.internal.virtnet.
+_ldap._tcp.internal.virtnet. 86400 IN SRV 0 100 389 ldap1.internal.virtnet.
+_ntp._udp.internal.virtnet. 86400 IN SRV 0 100 123 ldap1.internal.virtnet.
+ipa-ca.internal.virtnet. 86400 IN A 172.16.0.11
 ```
 ### zones/16.172.rev reverse lookup zone
 ```clike title="/var/named/zones/16.172.rev"

@@ -27,51 +27,6 @@ Finally enable the pgpool-II service:
 ```bash
 sudo systemctl enable --now pgpool.service
 ```
-## Add ipa authentication
-### Change config files on postgresql1
-```clike title="/var/lib/pgsql/12/data/pg_hba.conf"
-host    all             all             172.16.0.0/16           gss
-```
-```clike title="/var/lib/pgsql/12/data/postgresql.conf"
-krb_server_keyfile = '/var/lib/pgsql/12/data/pg.keytab'
-#krb_caseins_users = off
-krbsrvname = 'postgres-ipa'
-host    all     all     172.16.0.0/16  krb5
-```
-### Add ipa service
-```bash title="ldap1.internal.virtnet"
-ipa service-add postgres-ipa/`hostname`
-```
-```text title="expected output"
---------------------------------------------------------------------------
-Added service "postgres-ipa/postgresql1.internal.virtnet@INTERNAL.VIRTNET"
---------------------------------------------------------------------------
-  Principal name: postgres-ipa/postgresql1.internal.virtnet@INTERNAL.VIRTNET
-  Principal alias: postgres-ipa/postgresql1.internal.virtnet@INTERNAL.VIRTNET
-  Managed by: postgresql1.internal.virtnet
-```
-### Extract keytab
-Authenticate super user as admin:
-```bash
-sudo kinit admin
-```
-Run `ipa-getkeytab` as super user:
-```bash
-sudo ipa-getkeytab -s ldap2.internal.virtnet -p postgres-ipa/`hostname`@INTERNAL.VIRTNET -k /var/lib/pgsql/12/data/pg.keytab
-```
-### Double-check and secure keytab
-```bash
-sudo klist -kt /var/lib/pgsql/12/data/pg.keytab
-```
-```text title="expected output"
-KVNO Timestamp           Principal
----- ------------------- ------------------------------------------------------
-   6 01/04/2021 14:50:02 postgres-ipa/postgresql1.internal.virtnet@INTERNAL.VIRTNET
-   6 01/04/2021 14:50:02 postgres-ipa/postgresql1.internal.virtnet@INTERNAL.VIRTNET
-```
-```bash
-sudo chown postgres:postgres /var/lib/pgsql/12/data/pg.keytab
-```
 
 ## Set up Postgresql
 ### On postgresql1
@@ -84,7 +39,7 @@ listen_address = '*'
 Add the following entry at the bottom of the `pg_hba` file:
 ```bash title="/var/lib/pgsql/12/data/pg_hba.conf"
 ...
-host    all             all             172.16.0.10/16           md5
+host    all             all             172.16.0.10/16          md5
 ```
 Restart postgresql-12:
 ```bash
@@ -105,10 +60,10 @@ CREATE DATABASE candlepin OWNER candlepin;
 ### Test databases
 From the foreman sever:
 ```bash title="foreman.internal.virtnet"
-PGPASSWORD='<FOREMAN_PASSWORD>' psql -h postgresql1.internal.virtnet -p 5432 -U foreman -d -c "SELECT 1 as ping"
+PGPASSWORD='<FOREMAN_PASSWORD>' psql -h postgresql1.internal.virtnet -p 5432 -U foreman -d foreman -c "SELECT 1 as ping"
 ```
 ```bash title="foreman.internal.virtnet"
-PGPASSWORD='<CANDLEPIN_PASSWORD>' psql -h postgresql1.internal.virtnet  -p 5432 -U candlepin -d candlepin -c "SELECT 1 as ping"
+PGPASSWORD='<CANDLEPIN_PASSWORD>' psql -h postgresql1.internal.virtnet -p 5432 -U candlepin -d candlepin -c "SELECT 1 as ping"
 ```
 ```text title="expected output"
  ping

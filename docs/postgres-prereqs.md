@@ -3,6 +3,20 @@ id: postgres-prereqs
 title: Postgresql prerequisites
 sidebar_label: Postgres prerequisites
 ---
+```json
+        {
+          type: 'category',
+          label: 'Postgresql',
+          items: [
+            'postgres-prereqs',
+            'postgres-pgpool-install',
+            'postgres-migration',
+            'pgpool-II-setup',
+          ],
+        },
+```
+
+
 ## Set up pgpool-II and postgresql repo on Foreman
 Similar to [before](configuring-foreman-terminal) we'll need to add the pgpool repo to Foreman:
 ### Download GPG key
@@ -45,7 +59,7 @@ hammer content-view add-repository \
 ```
 ### Publish content view
 ```bash
-hammer content-view publish --id 2 --major 1 --minor 1 --description "Added pgpool-II and postgresql-12"
+hammer content-view publish --id 2 --major 1 --minor 1 --description "Added pgpool-II, postgresql-12, and mongodb"
 ```
 ### Promote new version
 ```bash
@@ -93,38 +107,6 @@ sudo virt-install --connect qemu:///system \
     --noautoconsole \
     --os-type=centos7.0 \
     --accelerate --hvm --vnc
-```
-
-## Create ipa pgpool group and users
-### Create pgpool group
-```bash title="ldap1.internal.virtnet"
-kinit admin
-```
-```bash title="ldap1.internal.virtnet"
-ipa group-add pgpool-users --desc="pgpool-II users for replication"
-```
-### Set password to never expire
-```bash title="ldap1.internal.virtnet"
-ipa pwpolicy-add pgpool-users --maxlife=0 --minlife=0 --maxfail=5 --lockouttime=600 --priority=3
-```
-### Create pgpool and repl users
-As is recommended by the official documentation of Pgpool-II, create a user for pgpool-II to use. This will be created on the ldap servers:
-```bash title="ldap1.internal.virtnet"
-ipa user-add pgpool --first=pg --last=pool --password
-```
-```bash title="ldap1.internal.virtnet"
-ipa user-add repl --first=re --last=pl --password
-```
-Add the user to the pgpool-users group:
-```bash title="ldap1.internal.virtnet"
-ipa group-add-member pgpool-users --users={pgpool,repl}
-```
-### Sign in as pgpool users and change passwords
-```bash
-su - pgpool
-```
-```bash
-su - repl
 ```
 
 ## Troubleshooting
