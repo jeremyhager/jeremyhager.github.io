@@ -5,6 +5,22 @@ sidebar_label: Setting up ldap servers
 ---
 
 Now that Foreman is set up to provision hosts and DHCP is pointed to the Foreman server, it's time to set up the ldap servers.
+## Create hosts on Foreman
+```bash title="ldap1"
+hammer host create \
+        --name "ldap1.internal.virtnet" \
+        --hostgroup "centos7-group" \
+        --interface "type=interface,mac=52:54:00:00:00:11,ip=172.16.0.11,managed=true,primary=true,provision=true" \
+        --location "Default Location"
+```
+```bash title="ldap2"
+hammer host create \
+        --name "ldap2.internal.virtnet" \
+        --hostgroup "centos7-group" \
+        --interface "type=interface,mac=52:54:00:00:00:12,ip=172.16.0.12,managed=true,primary=true,provision=true" \
+        --location "Default Location"
+```
+
 ## Creating ldap VMs
 :::note
 By default the kickstart file has created only the root account. After setting up ldap the root account will be disabled.
@@ -86,7 +102,7 @@ _ldap._tcp.internal.virtnet. 86400 IN SRV 0 100 389 ldap1.internal.virtnet.
 _ntp._udp.internal.virtnet. 86400 IN SRV 0 100 123 ldap1.internal.virtnet.
 ipa-ca.internal.virtnet. 86400 IN A 172.16.0.11
 ```
-
+<!--
 ```text
 The ipa-client-install command was successful
 
@@ -112,6 +128,7 @@ Be sure to back up the CA certificates stored in /root/cacert.p12
 These files are required to create replicas. The password for these
 files is the Directory Manager passwordmy 
 ```
+-->
 ## Enroll ldap2
 ### On ldap2
 Now that ldap1 is the master ldap server, join the ldap2 as a client to the domain:

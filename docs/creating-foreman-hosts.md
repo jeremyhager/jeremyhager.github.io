@@ -1,10 +1,13 @@
 ---
 id: creating-foreman-hosts
-title: Creating Foreman hosts
+title: Creating Foreman hosts (informational only)
 sidebar_label: Creating foreman hosts
 ---
 :::info
 This is part of the Foreman tutorial series. Be sure to refer to the [first tutorial](Installing-Foreman-with-Katello.md) if you have not already.
+:::
+:::caution
+This page is informational only. For each future host, a tutorial will be given on how to create the host in that moment.
 :::
 
 ## Gathering info

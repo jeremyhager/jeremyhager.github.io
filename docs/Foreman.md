@@ -8,14 +8,14 @@ sidebar_label: Foreman Configuration
 |----------|-------------|
 |CPU	   |2        	 |
 |RAM       |12288 (MiB)  |
-|vda       |32GB         |
+|vda       |128GB         |
 
 
 ## OS Info
 |Name   | Spec   |
 |-------|--------|
 |Hostname| foreman.internal.virtnet|
-|IP address| 192.168.86.10/24|
+|IP address| 172.16.0.10|
 |Kernel | 3.10.0-1062.el7.x86_64|
 |Release|CentOS Linux release 7.8.2003 (Core)|
 |Firewall services| dhcpv6-client http https ssh|
@@ -29,8 +29,9 @@ sidebar_label: Foreman Configuration
 ## Snapshot info
 |Name      |Description                            |
 |----------|---------------------------------------|
-|1608615128|Before foreman was enrolled in ldap    |
-|1608682531|Post ldap enrollment, pre db migration |
+|1609372699|Pre database migration                 |
+|1609956117|Resizing /dev/vda                      |
+|1610387700|Pre database migration; databases dumped|
 
 ## Package Info
 |Name   | Spec   |
