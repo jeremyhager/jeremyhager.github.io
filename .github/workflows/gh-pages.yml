@@ -1,6 +1,4 @@
- 
-  
- ​on​: 
+​on​: 
  ​  ​push​: 
  ​    ​branches​: 
  ​    - '​master' ​#​ Set a branch to deploy 
