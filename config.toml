@@ -5,7 +5,7 @@ theme = "smol"
 
 # Parameters
 [params]
-    subtitle = "Follow along as I learn about different technologies."
+    subtitle = ""
     dateFmt = "2006-02-01 15:04"
 
 # Header
