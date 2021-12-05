@@ -1,0 +1,54 @@
+baseURL = "https://yugawa.xyz/"
+languageCode = "en-us"
+title = "Jeremy Hager"
+theme = "smol"
+
+# Parameters
+[params]
+    subtitle = "Follow along as I learn about different technologies."
+    dateFmt = "2006-02-01 15:04"
+
+# Header
+[menu]
+  [[menu.main]]
+        identifier = "posts"
+        name = "Posts"
+        url = "/posts/"
+        weight = 1
+
+  [[menu.main]]
+        identifier = "categories"
+        name = "Categories"
+        url = "/categories/"
+        weight = 2
+
+  [[menu.main]]
+        identifier = "tags"
+        name = "Tags"
+        url = "/tags/"
+        weight = 3
+
+  [[menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about/"
+        weight = 4
+
+
+# Footer
+  [[menu.footer]]
+        name = "Github"
+        url = "https://github.com/jeremyhager"
+        weight = 1
+
+    [[menu.footer]]
+        name = "Source"
+        url = "https://github.com/jeremyhager/yugawa-website"
+        weight = 2
+
+    [[menu.footer]]
+        name = "LinkedIn"
+        url = "https://www.linkedin.com/in/hagerjeremy/"
+        weight = 3
+
+
