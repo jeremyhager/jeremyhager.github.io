@@ -2,8 +2,8 @@
  push​: 
  ​    ​branches​: 
  ​     ​master ​#​ Set a branch to deploy
-  
- ​jobs​: 
+
+jobs​: 
  ​  ​deploy​: 
  ​    ​runs-on​: ​ubuntu-20.04 
  ​    ​steps​: 
