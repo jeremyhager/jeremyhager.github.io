@@ -2,12 +2,14 @@ name: github pages
 
 on:
   pull_request:
-    branches:
-      - master  # Set a branch name to trigger deployment
+    branches: [master]
+  push:
+    branches: [master]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-18.04
+  checks:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -21,10 +23,26 @@ jobs:
 
       - name: Build
         run: hugo --minify
+  gh-release:
+      if: github.event_name != 'pull_request'
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: true  # Fetch Hugo themes (true OR recursive)
+            fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_PAGES_DEPLOY }}
-          publish_branch: gh-pages
-          publish_dir: ./public
+        - name: Setup Hugo
+          uses: peaceiris/actions-hugo@v2
+          with:
+            hugo-version: '0.79.1'
+
+        - name: Build
+          run: hugo --minify
+
+        - name: Deploy
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            github_token: ${{ secrets.GH_PAGES_DEPLOY }}
+            publish_branch: gh-pages
+            publish_dir: ./public
