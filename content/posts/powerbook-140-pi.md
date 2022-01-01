@@ -3,7 +3,7 @@ title: "Powerbook 140 Pi - Part 1"
 date: 2021-12-31T15:20:11-08:00
 slug: 2021-12-31-powerbook-140-pi
 type: posts
-draft: true
+draft: false
 categories:
   - default
 tags:
