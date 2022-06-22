@@ -1,0 +1,59 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><title>Moving on with Foreman</title><link rel=stylesheet href=/css/style.css></head><body><header>==================<br>== <a href=https://jeremyhager.github.io>Jeremy Hager</a> ==<br>==================<div style=float:right></div><br><p><nav><a href=/><b>Start</b></a>.
+<a href=/posts/><b>Posts</b></a>.
+<a href=/categories/><b>Categories</b></a>.
+<a href=/tags/><b>Tags</b></a>.
+<a href=https://docs.yugawa.xyz><b>Docs</b></a>.
+<a href=/about/><b>About</b></a>.</nav></p></header><main><article><h1>Moving on with Foreman</h1><b><time>0001-01-01 00:00</time></b>
+<a href=/tags/website>Website</a>
+<a href=/tags/foreman>Foreman</a>
+<a href=/tags/katello>Katello</a><div><p>Foreman has been giving me a little trouble as I began to set it up. First thing that happened is I could not import errata correctly, and I tried 2 different scripts out there to accomplish it. After several re-tries, I figured a fresh start would be good and reverted the Foreman VM back to before all of these changes happened.</p><p>Well after going through the process again, I unfortunately ran into another issue: I tried to back up the server. I went through the entire process of importing GPG keys, syncing repos, publishing, etc. Following the guide I found <a href=https://www.lisenet.com/2018/katello-create-products-repositories-content-views-lifecycle-environments-activation-keys/>here</a>, step 12 is to use <code>katello-backup</code>. However the new version of this is <code>foreman-maintain</code>.</p><p>Eventually I found the right command: <code>sudo foreman-maintain backup offline /mnt/backup</code>. Everything seemed to go okay&mldr;</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>Starting backup: 2020-08-25 18:13:10 -0400
+Running preparation steps required to run the next scenarios
+<span style=color:#f92672>================================================================================</span>
+Make sure Foreman DB is up:
+/ Checking connection to the Foreman DB                               <span style=color:#f92672>[</span>OK<span style=color:#f92672>]</span>
+--------------------------------------------------------------------------------
+
+
+Running Backup
+<span style=color:#f92672>================================================================================</span>
+Confirm turning off services is allowed:
+WARNING: This script will stop your services.
+
+Do you want to proceed?, <span style=color:#f92672>[</span>y<span style=color:#f92672>(</span>yes<span style=color:#f92672>)</span>, q<span style=color:#f92672>(</span>quit<span style=color:#f92672>)]</span> y
+                                                                      <span style=color:#f92672>[</span>OK<span style=color:#f92672>]</span>
+--------------------------------------------------------------------------------
+Prepare backup Directory:
+Creating backup folder /mnt/backup/katello-backup-2020-08-25-18-13-10 <span style=color:#f92672>[</span>OK<span style=color:#f92672>]</span>
+--------------------------------------------------------------------------------
+Check <span style=color:#66d9ef>if</span> the directory exists and is writable:                        <span style=color:#f92672>[</span>OK<span style=color:#f92672>]</span>
+--------------------------------------------------------------------------------
+.
+.
+.
+<span style=color:#75715e>#etc.</span>
+</code></pre></div><p>But then this hit me:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>Backup Candlepin DB offline:
+/ Collecting data from /var/opt/rh/rh-postgresql12/lib/pgsql/data/    <span style=color:#f92672>[</span>FAIL<span style=color:#f92672>]</span>
+Failed executing tar --selinux --create --file<span style=color:#f92672>=</span>/mnt/backup/katello-backup-2020-08-25-18-13-10/pgsql_data.tar --listed-incremental<span style=color:#f92672>=</span>/mnt/backup/katello-backup-2020-08-25-18-13-10/.postgres.snar --transform <span style=color:#e6db74>&#39;s,^,var/opt/rh/rh-postgresql12/lib/pgsql/data/,S&#39;</span> -S *, exit status 2:
+ tar: /mnt/backup/katello-backup-2020-08-25-18-13-10/pgsql_data.tar: Wrote only <span style=color:#ae81ff>4096</span> of <span style=color:#ae81ff>10240</span> bytes
+tar: Error is not recoverable: exiting now
+--------------------------------------------------------------------------------
+Scenario <span style=color:#f92672>[</span>Backup<span style=color:#f92672>]</span> failed.
+
+The following steps ended up in failing state:
+
+  <span style=color:#f92672>[</span>backup-offline-candlepin-db<span style=color:#f92672>]</span>
+
+Resolve the failed steps and rerun
+the command. In <span style=color:#66d9ef>case</span> the failures are false positives,
+use --whitelist<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;backup-offline-candlepin-db&#34;</span>
+
+
+The runner is already in quit state
+</code></pre></div><p>I spent a few days on this issue and tried multiple different avenues. To cut a long story short (re-initiating the backup, rebooting the server, starting PostgreSQL &ldquo;manually&rdquo;, reading <code>journalctl -xe</code>), I decided I needed to cut my losses and revert the VM again. So I took a snapshot of the vm, backed it up, and copied the xml of the broken server. Right now I don&rsquo;t think I have the know-how to fix this, but it could be a good troubleshooting project later on. So onward and upward, after reverting the VM I re-did my work.</p><h3 id=importing-errata>Importing errata</h3><p>This time I was able to backup my foreman/katello instance properly, but I was unable to import errata. Every time I did try, I would get the following message:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>Skipping errata [...] — No packages found
+</code></pre></div><p>I tried setting <code>--include-repo=</code> after running <code>pulp-admin repo list</code>, but that did not result in any errata info as well. I looked at the GitHub page for the perl script to see if anyone else has ran into a similar issue. Sure enough, an <a href=https://github.com/rdrgmnzs/pulp_centos_errata_import/issues/27>open issue</a> showed up: &ldquo;All errata fail to import showing no package found&rdquo;. However it seemed to be a dead end after giving the suggestions a try. Finally I looked at the script itself to see what it was doing, and hopefully where it was failing. I found the spot I was looking for:</p><pre><code class=language-clike data-lang=clike>  # Get all packages in current channel
+  my @allpkg = `pulp-admin $pulp_args rpm repo content rpm --repo-id=$repo --fields=filename | grep Filename: | awk '{print \$2}' `;
+  chomp @allpkg;
+</code></pre><p>What this told me is that it was using <code>pulp-admin rpm repo</code> to import/find the relevant information for the errata. I ran <code>pulp-admin rpm repo list</code>, and got zero repos back. There must have been a step I missed or something was amiss in general because I could not find a way for <code>pulp-admin rpm repo</code> to recognize and import my existing yum repo. I tried using an alterative script based in python, <code>katello-centos-errata-import</code>, but I had little luck with that one as well. Once again I felt the need to move on and try at a later time before spinning my wheels for too long.</p><h3 id=restoring-the-foreman-vm>Restoring the Foreman vm</h3><p>I did make some snapshots of the vm along the way, and decided to rename them since I was starting to not know what the differences were. That seemed like it was a bad idea though - after I set the names of the snapshots to better-suited names than timestamps, I couldn&rsquo;t revert the snapshot to right before I tried to import errata. What was strange is command would <em>appear</em> to execute successfully but I knew it wasn&rsquo;t, if only because it would be too quick to bring the virsh prompt back. After trying others I realized they all had the same issue: they would appear to execute quickly but the vm was still in the same state before applying. Finally I tried applying an old snapshot that still had the timestamp as its name and the snapshot applied correctly.</p><p>I renamed the snapshot I needed to the timestamp and tried to apply the snapshot again. Sure enough, the timestamp-named snapshot restored the vm. At this point I believe I need to cut my losses entirely on Foreman for now, and proceed with the other steps of the Linux sysadmin guide. The guide is to learn about Linux system administration, not just Foreman administration. I am excited to move on to step 3 in the Linux sysadmin guide, which will have me set up named, dhcpd, and having the dhcp use the Foreman server for pxeboot.</p><h3 id=hows-linux-going>How&rsquo;s Linux going?</h3><p>Excited to move on from Foreman! I may not be &ldquo;done&rdquo; with it but I am happy to be able to focus on something else for a little while.</p><h3 id=sources>Sources</h3><ul><li><a href=https://www.reddit.com/r/OSHA/comments/iiaoyw/this_light_bulb_in_our_walkin_fridge/>Image source</a></li><li><a href=https://github.com/rdrgmnzs/pulp_centos_errata_import/>Perl script to import errata</a></li><li><a href=https://github.com/rdrgmnzs/pulp_centos_errata_import/blob/master/errata_import.pl#L154-L156>Lines 154-156 of perl script</a></li><li><a href=https://github.com/nicolas-r/katello-centos-errata-import>Python script to import errata</a></li></ul></div></article></main><aside><div><div><h3>LATEST POSTS</h3></div><div><ul><li><a href=/posts/2021-12-31-powerbook-140-pi/>Powerbook 140 Pi - Part 1</a></li><li><a href=/posts/2021-12-04-new-webiste/>New Webiste</a></li><li><a href=/posts/2020-08-05-windows-vm-with-libvirt/>Getting a Windows VM to work with libvirt</a></li><li><a href=/posts/2020-08-16-new-website/>Got a new website up and running!</a></li><li><a href=/posts/2020-08-11-headless-centos7-vm/>Installing a "headless" CentOS 7 VM</a></li></ul></div></div></aside><footer><p>&copy; 2022 <a href=https://jeremyhager.github.io><b>Jeremy Hager</b></a>.
+<a href=https://github.com/jeremyhager><b>Github</b></a>.
+<a href=https://github.com/jeremyhager/yugawa-website><b>Source</b></a>.
+<a href=https://www.linkedin.com/in/hagerjeremy/><b>LinkedIn</b></a>.</p></footer></body></html>

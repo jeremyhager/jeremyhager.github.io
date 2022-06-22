@@ -1,0 +1,72 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><title>Installing a "headless" CentOS 7 VM</title><link rel=stylesheet href=/css/style.css></head><body><header>==================<br>== <a href=https://jeremyhager.github.io>Jeremy Hager</a> ==<br>==================<div style=float:right></div><br><p><nav><a href=/><b>Start</b></a>.
+<a href=/posts/><b>Posts</b></a>.
+<a href=/categories/><b>Categories</b></a>.
+<a href=/tags/><b>Tags</b></a>.
+<a href=https://docs.yugawa.xyz><b>Docs</b></a>.
+<a href=/about/><b>About</b></a>.</nav></p></header><main><article><h1>Installing a "headless" CentOS 7 VM</h1><b><time>0001-01-01 00:00</time></b>
+<a href=/tags/website>Website</a>
+<a href=/tags/linux>Linux</a>
+<a href=/tags/windows>Windows</a>
+<a href=/tags/libvirt>Libvirt</a><div><p>I found a section in the Unix and Linux Sysadmin Handbook about kickstart files - something I crossed by earlier when I was trying to get CentOS 7 to work on my homebuilt computer. However I was going through the book page-by-page at the time, and like I mentioned I felt like I was spending too much time on getting CentOS 7 to work on my homebuilt hardware.</p><p>An interesting error I kept running into when I first was trying to get the VM to work was <code>ERROR Kernel arguments are only supported with location or kernel installs</code>.
+Here is what I was running that would create this error:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo virt-install --connect qemu:///system --network<span style=color:#f92672>=</span>bridge:virbr0 --initrd-inject<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;home/jeremy/ks.cfg&#34;</span> --extra-args<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;ks=file:/ks.cfg console=ttys0&#34;</span> -n MoinMoin -f /home/imgs/moinmoin.img -r <span style=color:#ae81ff>1024</span> -s <span style=color:#ae81ff>12</span> -c /home/isos/CentOS-7-x86_64-DVD-1908.iso --os-type<span style=color:#f92672>=</span>centos7.0 --accelerate --hvm --nographics --boot cdrom
+</code></pre></div><p>For anyone reading this that has experience with libvirt/virt-install, you probably already see what I&rsquo;m doing wrong. When I searched &ldquo;ERROR Kernel arguments are only supported with location or kernel installs&rdquo; online with quotes, I had a hard time finding anything related to what I was doing. However I still didn&rsquo;t know what was going on even after reading anything I could find on the matter, so the next thing I tried was to remove the <code>--extra-args</code> portion to see if something was conflicting:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo virt-install --connect qemu:///system --network<span style=color:#f92672>=</span>bridge:virbr0 --initrd-inject<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;home/jeremy/ks.cfg&#34;</span> --extra-args<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;ks=file:/ks.cfg console=ttys0&#34;</span> -n MoinMoin -f /home/imgs/moinmoin.img -r <span style=color:#ae81ff>1024</span> -s <span style=color:#ae81ff>12</span> -c /home/isos/CentOS-7-x86_64-DVD-1908.iso --os-type<span style=color:#f92672>=</span>centos7.0 --accelerate --hvm --nographics --boot cdrom
+
+ERROR    Install method does not support initrd injections.
+</code></pre></div><p>So now I have this new error, which says whatever way I am trying to install doesn&rsquo;t support initrd injections. I tried enabling libvirt logging and even taking a look around in the source code of libvirt, but I had no luck finding my errors. After some time digging and searching, I found a comment on a serverfault page that lead me to the answer:</p><blockquote><p>slm: How were you able to get the &ndash;extra-args switch to work with &ndash;cdrom? According to the virt-install man page &ndash;extra-args only works with &ndash;location?</p></blockquote><p>So there it was: I had to change <code>--cdrom</code> to <code>location</code> in order to work with <code>--extra-args</code>. Now I revised my command to the following:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo virt-install --connect qemu:///system --network<span style=color:#f92672>=</span>bridge:virbr0 --initrd-inject<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/home/jeremy/ks.cfg&#34;</span> --extra-args<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;ks=file:/ks.cfg console=ttyS0&#34;</span> -n MoinMoin -f /home/imgs/moinmoin.img -r <span style=color:#ae81ff>1024</span> -s <span style=color:#ae81ff>12</span> --location<span style=color:#f92672>=</span>/home/isos/CentOS-7-x86_64-DVD-1908.iso --os-type<span style=color:#f92672>=</span>centos7.0 --accelerate --hvm --graphics none
+</code></pre></div><p>Then boom: Install flew by and I was connected via serial console to the VM! Now in my defense to the comment slm made above, I went back to the man page of virt-install and I did not see it <em>explicitly</em> expressed that one <strong>cannot</strong> use <code>--extra-args</code> with <code>-c</code> and <code>--extra-args</code> <strong>only</strong> works with <code>--location</code>. However it <em>does</em> state that <code>--extra-args</code> is used to pass kernel arguments from <code>--location</code>. So I suppose one could say that if I read it more carefully perhaps I&rsquo;d make the connection&mldr;however I still do wish it was a bit more explicit for those that may have a lapse in reading comprehension.</p><p>One thing I noticed is that by using <code>--location</code> I no longer needed to eject the cdrom before undefining the VM in virsh. In case you ever run into this yourself, the syntax is rather easy to eject an ISO from virsh: <code>change-media domain PATH --eject</code> where <code>PATH</code> = sda, sdb, etc. Finding what <code>PATH</code> to use is also easy: <code>domblklist domain</code>.</p><h4 id=here-are-the-man-pages-for-virt-install-specifically-on-the-arguments-used>Here are the man pages for virt-install, specifically on the arguments used</h4><h4 id=-x---extra-args-kernelargs>-x, &ndash;extra-args KERNELARGS</h4><pre><code> Additional kernel command line arguments to pass to the installer when performing a guest install from
+ &quot;--location&quot;. One common usage is specifying an anaconda kickstart file for automated installs, such as
+ --extra-args &quot;ks=https://myserver/my.ks&quot;
+</code></pre><h4 id=-c---cdrom-path>-c, &ndash;cdrom PATH</h4><pre><code> ISO file or CDROM device to use for VM install media. After install, the the virtual CDROM device will
+ remain attached to the VM, but with the ISO or host path media ejected.
+</code></pre><h4 id=--l---location-options>&ndash;l, &ndash;location OPTIONS</h4><pre><code> Distribution tree installation source. virt-install can recognize certain distribution trees and fetches a
+ bootable kernel/initrd pair to launch the install.
+
+ --location allows things like --extra-args for kernel arguments, and using --initrd-inject. If you want to
+ use those options with CDROM media, you can pass the ISO to --location as well which works for some, but
+ not all, CDROM media.
+
+ The &quot;LOCATION&quot; can take one of the following forms:
+
+ https://host/path
+     An HTTP server location containing an installable distribution image.
+
+ ftp://host/path
+     An FTP server location containing an installable distribution image.
+
+ ISO Probe the ISO and extract files using 'isoinfo'
+
+ DIRECTORY
+     Path to a local directory containing an installable distribution image. Note that the directory will
+     not be accessible by the guest after initial boot, so the OS installer will need another way to access
+     the rest of the install media.
+
+ Some distro specific url samples:
+
+ Fedora/Red Hat Based
+     https://download.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/os
+
+ Debian
+     https://ftp.us.debian.org/debian/dists/stable/main/installer-amd64/
+
+ Ubuntu
+     https://us.archive.ubuntu.com/ubuntu/dists/wily/main/installer-amd64/
+
+ Suse
+     https://download.opensuse.org/pub/opensuse/distribution/leap/42.3/repo/oss/
+
+ Additionally, --location can take 'kernel' and 'initrd' sub options. These paths relative to the specified
+ location URL/ISO that allow selecting specific files for kernel/initrd within the install tree. This can
+ be useful if virt-install/ libosinfo doesn't know where to find the kernel in the specified --location.
+
+ For example, if you have an ISO that libosinfo doesn't know about called my-unknown.iso, with a kernel at
+ 'kernel/fookernel' and initrd at 'kernel/fooinitrd', you can make this work with:
+
+ --location my-unknown.iso,kernel=kernel/fookernel,initrd=kernel/fooinitrd
+</code></pre><h4 id=---initrd-inject-path>&mdash;initrd-inject PATH</h4><pre><code>Add PATH to the root of the initrd fetched with &quot;--location&quot;. This can be used to run an automated install
+       without requiring a network hosted kickstart file:
+
+       --initrd-inject=/path/to/my.ks --extra-args &quot;ks=file:/my.ks&quot;
+</code></pre><p>If you don&rsquo;t believe me, check out the references below and look for yourself (or just run a <code>man virt-intall</code>).</p><h3 id=hows-linux-going>How&rsquo;s Linux going?</h3><p>I&rsquo;ve got a kickstart file working and CentOS 7 is installed as a VM! I am now going to be working on installing MoinMoin, a simple wiki that I found centos.org uses as well for its wiki. This way I can write detailed instructions on everything I do.</p><h3 id=resources>Resources</h3><p><a href=https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install/#sect-Guest_virtual_machine_installation_overview-virt_install-Kickstart>Installing a virtual machine with Kickstart</a></p><p><a href=https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/installation_guide/sect-kickstart-syntax>Creating a Kickstart file via RedHat</a></p><p><a href=https://docs.centos.org/en-US/centos/install-guide/Kickstart2/>Creating a Kickstart file via CentOS</a></p><p><a href=https://linux.die.net/man/1/virt-install>virt-install man page online</a></p><p><a href=https://serverfault.com/questions/257962/kvm-guest-installed-from-console-but-how-to-get-to-the-guests-console#comment263251_257962>slm comments on ServerFault about <code>--extra-args</code> exclusivity with <code>--location</code></a></p><p><a href=https://serverfault.com/a/400006>On the same thread as slm - brayden points out using <code>--extra-args='console=ttys0'</code> to connect to a serial console during install of a VM</a></p></div></article></main><aside><div><div><h3>LATEST POSTS</h3></div><div><ul><li><a href=/posts/2021-12-31-powerbook-140-pi/>Powerbook 140 Pi - Part 1</a></li><li><a href=/posts/2021-12-04-new-webiste/>New Webiste</a></li><li><a href=/posts/2020-08-05-windows-vm-with-libvirt/>Getting a Windows VM to work with libvirt</a></li><li><a href=/posts/2020-08-16-new-website/>Got a new website up and running!</a></li><li><a href=/posts/2020-08-11-headless-centos7-vm/>Installing a "headless" CentOS 7 VM</a></li></ul></div></div></aside><footer><p>&copy; 2022 <a href=https://jeremyhager.github.io><b>Jeremy Hager</b></a>.
+<a href=https://github.com/jeremyhager><b>Github</b></a>.
+<a href=https://github.com/jeremyhager/yugawa-website><b>Source</b></a>.
+<a href=https://www.linkedin.com/in/hagerjeremy/><b>LinkedIn</b></a>.</p></footer></body></html>
